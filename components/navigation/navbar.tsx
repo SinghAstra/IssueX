@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import AnimationContainer from "../global/animation-container";
 import MaxWidthWrapper from "../global/max-width-wrapper";
 import { Icons } from "../ui/Icons";
+import MobileNavbar from "./mobile-navbar";
 
 const Navbar = () => {
   const [scroll, setScroll] = useState(false);
@@ -154,7 +155,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* <MobileNavbar /> */}
+          <MobileNavbar />
         </MaxWidthWrapper>
       </AnimationContainer>
     </header>

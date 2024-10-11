@@ -3,9 +3,11 @@ import {
   LineChartIcon,
   Link2Icon,
   LockIcon,
+  Menu,
   Merge,
   NewspaperIcon,
   QrCodeIcon,
+  X,
   ZapIcon,
 } from "lucide-react";
 
@@ -18,4 +20,6 @@ export const Icons = {
   qr: QrCodeIcon,
   zap: ZapIcon,
   logo: Merge,
+  menu: Menu,
+  close: X,
 };
