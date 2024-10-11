@@ -142,10 +142,13 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/auth/sign-up"
-                  className={buttonVariants({ size: "sm" })}
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "bg-white",
+                  })}
                 >
                   Get Started
-                  <Icons.zap className="size-4 ml-1.5 text-white fill-white" />
+                  <Icons.zap className="size-4 ml-1.5 text-orange-500 fill-orange-500" />
                 </Link>
               </div>
             )}

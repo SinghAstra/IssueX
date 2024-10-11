@@ -3,6 +3,7 @@ import {
   LineChartIcon,
   Link2Icon,
   LockIcon,
+  Merge,
   NewspaperIcon,
   QrCodeIcon,
   ZapIcon,
@@ -16,4 +17,5 @@ export const Icons = {
   news: NewspaperIcon,
   qr: QrCodeIcon,
   zap: ZapIcon,
+  logo: Merge,
 };

@@ -1,3 +1,4 @@
+import Footer from "@/components/navigation/footer";
 import Navbar from "@/components/navigation/navbar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -29,7 +30,7 @@ const NotFound = () => {
         </div>
       </div>
 
-      {/* <Footer /> */}
+      <Footer />
     </main>
   );
 };

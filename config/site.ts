@@ -8,5 +8,6 @@ export const siteConfig: SiteConfig = {
   links: {
     twitter: "https://x.com/XSinghAstra",
     github: "https://github.com/SinghAstra/MergeX",
+    linkedIn: "https://www.linkedin.com/in/singhastra",
   },
 };
