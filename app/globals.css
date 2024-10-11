@@ -32,21 +32,16 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  ::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-  }
-  body {
-    scrollbar-width: none;
-  }
-  body::-ms-scrollbar {
-    display: none;
-  }
+::-webkit-scrollbar {
+  width: 6px;
+  scrollbar-color: #262626;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #262626;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
 }
