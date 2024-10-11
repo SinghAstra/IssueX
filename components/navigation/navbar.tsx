@@ -40,6 +40,8 @@ const Navbar = () => {
     };
   }, []);
 
+  console.log("homeNavLinks is ", homeNavLinks);
+
   return (
     <header
       className={cn(
@@ -62,7 +64,7 @@ const Navbar = () => {
                   <NavigationMenuItem key={link.title}>
                     {link.menu ? (
                       <>
-                        <NavigationMenuTrigger>
+                        <NavigationMenuTrigger className="bg-transparent">
                           {link.title}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
@@ -109,7 +111,12 @@ const Navbar = () => {
                         </NavigationMenuContent>
                       </>
                     ) : (
-                      <Link href={link.href} legacyBehavior passHref>
+                      <Link
+                        href={link.href}
+                        legacyBehavior
+                        passHref
+                        className="bg-transparent"
+                      >
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
                         >

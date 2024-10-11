@@ -1,4 +1,5 @@
 import {
+  ArrowRightIcon,
   HelpCircleIcon,
   LineChartIcon,
   Link2Icon,
@@ -22,4 +23,5 @@ export const Icons = {
   logo: Merge,
   menu: Menu,
   close: X,
+  next: ArrowRightIcon,
 };

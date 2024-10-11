@@ -1,4 +1,5 @@
 import Providers from "@/components/providers/provider";
+import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -16,9 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`min-h-screen bg-background text-foreground antialiased !font-default overflow-x-hidden border-border`}
+        className={`min-h-screen bg-background text-foreground antialiased !font-default overflow-x-hidden`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <Toaster richColors theme="dark" position="top-right" />
+          {children}
+        </Providers>
       </body>
     </html>
   );
