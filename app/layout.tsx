@@ -1,3 +1,4 @@
+import Providers from "@/components/providers/provider";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -14,7 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`min-h-screen bg-background text-foreground antialiased !font-default overflow-x-hidden border-border`}>{children}</body>
+      <body
+        className={`min-h-screen bg-background text-foreground antialiased !font-default overflow-x-hidden border-border`}
+      >
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
