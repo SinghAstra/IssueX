@@ -6,9 +6,6 @@ export default function Home() {
           <div className="text-xl font-bold text-gray-800">PR Review AI</div>
           <div>
             <a href="#" className="text-gray-800 hover:text-gray-600 mx-3">
-              Home
-            </a>
-            <a href="#" className="text-gray-800 hover:text-gray-600 mx-3">
               Features
             </a>
             <a href="#" className="text-gray-800 hover:text-gray-600 mx-3">
