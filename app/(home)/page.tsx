@@ -3,8 +3,10 @@ import MaxWidthWrapper from "@/components/global/max-width-wrapper";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/ui/Icons";
+import MagicBadge from "@/components/ui/magic-badge";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { siteConfig } from "@/config/site";
+import { COMPANIES } from "@/lib/constants/companies";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,22 +16,26 @@ const HomePage = async () => {
   const user = false;
 
   return (
-    <div className="overflow-x-hidden scrollbar-hide size-full">
+    <div className="pt-20 overflow-x-hidden no-scrollbar size-full">
       {/* Hero Section */}
       <MaxWidthWrapper>
         <div className="flex flex-col items-center justify-center w-full text-center bg-gradient-to-t from-background">
           <AnimationContainer className="flex flex-col items-center justify-center w-full text-center">
             <Link
               href={siteConfig.links.twitter}
-              className="flex items-center gap-5 py-2 px-4 bg-muted rounded-2xl"
               target="_blank"
+              className="relative inline-flex h-10 overflow-hidden rounded-full p-[1.5px] focus:outline-none select-none"
             >
-              Follow Along on twitter
-              <Icons.next className="size-6 animate-moveLeftRight" />
+              <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--primary))_0%,hsl(var(--primary-foreground))_50%,hsl(var(--primary))_100%)]" />
+
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[hsl(var(--background))] px-4 py-1 text-sm font-medium text-[hsl(var(--foreground))] backdrop-blur-3xl">
+                Follow Along on twitter
+                <Icons.next className="ml-2 size-6 animate-moveLeftRight" />
+              </span>
             </Link>
             <h1 className="text-foreground text-center py-6 text-5xl font-medium tracking-normal text-balance sm:text-6xl md:text-7xl lg:text-8xl !leading-[1.15] w-full font-heading">
               Revolutionize Your{" "}
-              <span className="text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text inline-bloc">
+              <span className="text-transparent bg-gradient-to-r from-[#5daaf1] to-primary bg-clip-text inline-bloc">
                 Code Reviews
               </span>
             </h1>
@@ -75,55 +81,56 @@ const HomePage = async () => {
       </MaxWidthWrapper>
 
       {/* Companies Section */}
-      {/* <MaxWidthWrapper>
-                <AnimationContainer delay={0.4}>
-                    <div className="py-14">
-                        <div className="mx-auto px-4 md:px-8">
-                            <h2 className="text-center text-sm font-medium font-heading text-neutral-400 uppercase">
-                                Trusted by the best in the industry
-                            </h2>
-                            <div className="mt-8">
-                                <ul className="flex flex-wrap items-center gap-x-6 gap-y-6 md:gap-x-16 justify-center">
-                                    {COMPANIES.map((company) => (
-                                        <li key={company.name}>
-                                            <Image
-                                                src={company.logo}
-                                                alt={company.name}
-                                                width={80}
-                                                height={80}
-                                                quality={100}
-                                                className="w-28 h-auto"
-                                            />
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </AnimationContainer>
-            </MaxWidthWrapper> */}
+      <MaxWidthWrapper>
+        <AnimationContainer delay={0.8}>
+          <div className="py-14">
+            <div className="mx-auto px-4 md:px-8">
+              <h2 className="text-center text-sm font-medium font-heading text-neutral-400 uppercase">
+                Trusted by the best in the industry
+              </h2>
+              <div className="mt-8">
+                <ul className="flex flex-wrap items-center gap-x-6 gap-y-6 md:gap-x-16 justify-center">
+                  {COMPANIES.map((company) => (
+                    <li key={company.name}>
+                      <Image
+                        src={company.logo}
+                        alt={company.name}
+                        width={80}
+                        height={80}
+                        quality={100}
+                        className="w-28 h-auto"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </AnimationContainer>
+      </MaxWidthWrapper>
 
       {/* Features Section */}
-      {/* <MaxWidthWrapper className="pt-10">
-                <AnimationContainer delay={0.1}>
-                    <div className="flex flex-col w-full items-center lg:items-center justify-center py-8">
-                        <MagicBadge title="Features" />
-                        <h2 className="text-center lg:text-center text-3xl md:text-5xl !leading-[1.1] font-medium font-heading text-foreground mt-6">
-                            Manage Links Like a Pro
-                        </h2>
-                        <p className="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
-                            Linkify is a powerful link management tool that helps you shorten, track, and organize all your links in one place.
-                        </p>
-                    </div>
-                </AnimationContainer>
-                <AnimationContainer delay={0.2}>
-                    <BentoGrid className="py-8">
-                        {CARDS.map((feature, idx) => (
-                            <BentoCard key={idx} {...feature} />
-                        ))}
-                    </BentoGrid>
-                </AnimationContainer>
-            </MaxWidthWrapper> */}
+      <MaxWidthWrapper className="pt-10">
+        <AnimationContainer delay={0.1}>
+          <div className="flex flex-col w-full items-center lg:items-center justify-center py-8">
+            <MagicBadge title="Features" />
+            <h2 className="text-center lg:text-center text-3xl md:text-5xl !leading-[1.1] font-medium font-heading text-foreground mt-6">
+              Manage Links Like a Pro
+            </h2>
+            <p className="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+              {siteConfig.name} is a powerful link management tool that helps
+              you shorten, track, and organize all your links in one place.
+            </p>
+          </div>
+        </AnimationContainer>
+        {/* <AnimationContainer delay={0.2}>
+          <BentoGrid className="py-8">
+            {CARDS.map((feature, idx) => (
+              <BentoCard key={idx} {...feature} />
+            ))}
+          </BentoGrid>
+        </AnimationContainer> */}
+      </MaxWidthWrapper>
 
       {/* Process Section */}
       {/* <MaxWidthWrapper className="py-10">
