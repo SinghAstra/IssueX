@@ -40,8 +40,6 @@ const Navbar = () => {
     };
   }, []);
 
-  console.log("homeNavLinks is ", homeNavLinks);
-
   return (
     <header
       className={cn(
