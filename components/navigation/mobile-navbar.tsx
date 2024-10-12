@@ -132,44 +132,34 @@ const MobileNavbar = () => {
     </div>
   );
 };
-interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
-  title: string;
-  href: string;
-  icon: keyof typeof Icons;
-  className?: string;
-  children?: React.ReactNode;
-}
-
-const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
-  ({ className, title, href, icon, children, ...props }, ref) => {
-    const IconComponent = Icons[icon];
-
-    return (
-      <li>
-        <Link
-          href={href!}
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & { title: string; icon: LucideIcon }
+>(({ className, title, href, icon: Icon, children, ...props }, ref) => {
+  return (
+    <li>
+      <Link
+        href={href!}
+        ref={ref}
+        className={cn(
+          "block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+          className
+        )}
+        {...props}
+      >
+        <div className="flex items-center space-x-2 text-foreground">
+          <Icon className="h-4 w-4" />
+          <h6 className="text-sm !leading-none">{title}</h6>
+        </div>
+        <p
+          title={children! as string}
+          className="line-clamp-1 text-sm leading-snug text-muted-foreground"
         >
-          <div className="flex items-center space-x-2 text-foreground">
-            <IconComponent className="h-4 w-4" />
-            <h6 className="text-sm !leading-none">{title}</h6>
-          </div>
-          <p
-            title={children! as string}
-            className="line-clamp-1 text-sm leading-snug text-muted-foreground"
-          >
-            {children}
-          </p>
-        </Link>
-      </li>
-    );
-  }
-);
+          {children}
+        </p>
+      </Link>
+    </li>
+  );
+});
 ListItem.displayName = "ListItem";
-
 export default MobileNavbar;

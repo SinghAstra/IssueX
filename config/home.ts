@@ -1,7 +1,6 @@
 import { Icons } from "@/components/ui/Icons";
-import { NavLink } from "@/types";
 
-export const homeNavLinks: NavLink[] = [
+export const homeNavLinks = [
   {
     title: "Features",
     href: "/features",
@@ -10,25 +9,25 @@ export const homeNavLinks: NavLink[] = [
         title: "Link Shortening",
         tagline: "Shorten links and track their performance.",
         href: "/features/link-shortening",
-        icon: "help",
+        icon: Icons.help,
       },
       {
         title: "Password Protection",
         tagline: "Secure your links with a password.",
         href: "/features/password-protection",
-        icon: "lock",
+        icon: Icons.lock,
       },
       {
         title: "Advanced Analytics",
         tagline: "Gain insights into who is clicking your links.",
         href: "/features/analytics",
-        icon: "chart",
+        icon: Icons.chart,
       },
       {
         title: "Custom QR Codes",
         tagline: "Use QR codes to reach your audience.",
         href: "/features/qr-codes",
-        icon: "qr",
+        icon: Icons.qr,
       },
     ],
   },
@@ -48,13 +47,13 @@ export const homeNavLinks: NavLink[] = [
         title: "Blog",
         tagline: "Read articles on the latest trends in tech.",
         href: "/resources/blog",
-        icon: "news",
+        icon: Icons.news,
       },
       {
         title: "Help",
         tagline: "Get answers to your questions.",
         href: "/resources/help",
-        icon: "help",
+        icon: Icons.help,
       },
     ],
   },
