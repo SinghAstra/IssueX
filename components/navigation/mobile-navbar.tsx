@@ -132,7 +132,6 @@ const MobileNavbar = () => {
     </div>
   );
 };
-
 interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
   title: string;
   href: string;
@@ -144,6 +143,7 @@ interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
 const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
   ({ className, title, href, icon, children, ...props }, ref) => {
     const IconComponent = Icons[icon];
+
     return (
       <li>
         <Link
