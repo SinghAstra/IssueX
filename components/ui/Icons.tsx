@@ -3,6 +3,7 @@ import {
   HelpCircleIcon,
   LineChartIcon,
   Link2Icon,
+  LoaderCircle,
   LockIcon,
   Menu,
   Merge,
@@ -24,4 +25,5 @@ export const Icons = {
   menu: Menu,
   close: X,
   next: ArrowRightIcon,
+  spinner: LoaderCircle,
 };
