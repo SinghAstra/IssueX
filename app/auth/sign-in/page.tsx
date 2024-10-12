@@ -1,3 +1,5 @@
+import { signIn } from "@/auth";
+import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/Icons";
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
@@ -11,7 +13,16 @@ const SignInPage = () => {
           <h1 className="text-lg font-medium">{siteConfig.name}</h1>
         </Link>
       </div>
-
+      <div className="flex flex-1 items-center justify-center flex-col gap-2">
+        <form
+          action={async () => {
+            "use server";
+            await signIn("github");
+          }}
+        >
+          <button type="submit">Sign-in with GitHub</button>
+        </form>
+      </div>
       <div className="flex flex-col items-start w-full">
         <p className="text-sm text-muted-foreground">
           By signing in, you agree to our{" "}

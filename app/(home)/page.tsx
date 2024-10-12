@@ -1,3 +1,4 @@
+"use client";
 import AnimationContainer from "@/components/global/animation-container";
 import MaxWidthWrapper from "@/components/global/max-width-wrapper";
 import { BentoCard, BentoGrid, featureCards } from "@/components/ui/bento-grid";
@@ -9,12 +10,15 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { siteConfig } from "@/config/site";
 import { COMPANIES } from "@/lib/constants/companies";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import GetStarted from "./GetStarted";
 
-const HomePage = async () => {
+const HomePage = () => {
   const user = false;
+  const session = useSession();
+  console.log("session --page --home is ", session);
 
   return (
     <div className="pt-20 overflow-x-hidden no-scrollbar size-full">
