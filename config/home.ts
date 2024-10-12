@@ -1,4 +1,5 @@
 import { Icons } from "@/components/ui/Icons";
+import { NavLink } from "@/types";
 
 // export const homeNavLinks = [
 //   {
@@ -63,4 +64,4 @@ import { Icons } from "@/components/ui/Icons";
 //   },
 // ];
 
-export const homeNavLinks = [];
+export const homeNavLinks: NavLink[] = [];
