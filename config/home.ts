@@ -1,7 +1,7 @@
 import { Icons } from "@/components/ui/Icons";
 import { NavLink } from "@/types";
 
-// export const homeNavLinks = [
+// export const homeNavLinks: NavLink[] = [
 //   {
 //     title: "Features",
 //     href: "/features",
@@ -10,25 +10,25 @@ import { NavLink } from "@/types";
 //         title: "Link Shortening",
 //         tagline: "Shorten links and track their performance.",
 //         href: "/features/link-shortening",
-//         icon: Icons.help,
+//         icon: "help",
 //       },
 //       {
 //         title: "Password Protection",
 //         tagline: "Secure your links with a password.",
 //         href: "/features/password-protection",
-//         icon: Icons.lock,
+//         icon: "lock",
 //       },
 //       {
 //         title: "Advanced Analytics",
 //         tagline: "Gain insights into who is clicking your links.",
 //         href: "/features/analytics",
-//         icon: Icons.chart,
+//         icon: "chart",
 //       },
 //       {
 //         title: "Custom QR Codes",
 //         tagline: "Use QR codes to reach your audience.",
 //         href: "/features/qr-codes",
-//         icon: Icons.qr,
+//         icon: "qr",
 //       },
 //     ],
 //   },
@@ -48,13 +48,13 @@ import { NavLink } from "@/types";
 //         title: "Blog",
 //         tagline: "Read articles on the latest trends in tech.",
 //         href: "/resources/blog",
-//         icon: Icons.news,
+//         icon: "news",
 //       },
 //       {
 //         title: "Help",
 //         tagline: "Get answers to your questions.",
 //         href: "/resources/help",
-//         icon: Icons.help,
+//         icon: "help",
 //       },
 //     ],
 //   },
