@@ -1,5 +1,6 @@
 import AnimationContainer from "@/components/global/animation-container";
 import MaxWidthWrapper from "@/components/global/max-width-wrapper";
+import { BentoCard, BentoGrid, featureCards } from "@/components/ui/bento-grid";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/ui/Icons";
@@ -112,21 +113,22 @@ const HomePage = async () => {
           <div className="flex flex-col w-full items-center lg:items-center justify-center py-8">
             <MagicBadge title="Features" />
             <h2 className="text-center lg:text-center text-3xl md:text-5xl !leading-[1.1] font-medium font-heading text-foreground mt-6">
-              Manage Links Like a Pro
+              Automate Your GitHub PR Reviews
             </h2>
             <p className="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
-              {siteConfig.name} is a powerful link management tool that helps
-              you shorten, track, and organize all your links in one place.
+              With our automatic PR review system, you can receive timely
+              reviews, and enhance collaboration—all while ensuring code quality
+              in every pull request.
             </p>
           </div>
         </AnimationContainer>
-        {/* <AnimationContainer delay={0.2}>
+        <AnimationContainer delay={0.2}>
           <BentoGrid className="py-8">
-            {CARDS.map((feature, idx) => (
+            {featureCards.map((feature, idx) => (
               <BentoCard key={idx} {...feature} />
             ))}
           </BentoGrid>
-        </AnimationContainer> */}
+        </AnimationContainer>
       </MaxWidthWrapper>
 
       {/* Process Section */}
