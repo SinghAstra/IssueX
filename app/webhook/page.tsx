@@ -42,7 +42,7 @@ const WebhookSetup = () => {
       if (session) {
         setIsLoading(true);
         try {
-          const response = await fetch("/api/getUserRepos");
+          const response = await fetch("/api/get-user-repos");
           const data = await response.json();
           if (data.repos) {
             setRepos(data.repos);

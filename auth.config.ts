@@ -7,14 +7,13 @@ const providers = [
   GitHub({
     clientId: process.env.AUTH_GITHUB_ID,
     clientSecret: process.env.AUTH_GITHUB_SECRET,
+    authorization: {
+      params: {
+        scope: "read:user user:email repo public_repo",
+      },
+    },
   }),
 ];
-
-export const providerMap = providers
-  .map((provider) => {
-    return { id: provider.id, name: provider.name };
-  })
-  .filter((provider) => provider.id !== "credentials");
 
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(db),

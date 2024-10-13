@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import axios from "axios";
+import { siteConfig } from "@/config/site";
+import { Octokit } from "@octokit/core";
 import { NextResponse } from "next/server";
 
 const GITHUB_API_BASE_URL = "https://api.github.com";
@@ -18,27 +19,44 @@ export async function POST(request: Request) {
 
     console.log("repoFullName is ", repoFullName);
 
-    const response = await axios.post(
-      `${GITHUB_API_BASE_URL}/repos/${repoFullName}/hooks`,
+    const [owner, repo] = repoFullName.split("/");
+
+    if (!owner || !repo) {
+      return Response.json(
+        { error: "Invalid repository name" },
+        { status: 400 }
+      );
+    }
+
+    console.log(
+      "`${GITHUB_API_BASE_URL}/repos/${repoFullName}/hooks` is ",
+      `${GITHUB_API_BASE_URL}/repos/${repoFullName}/hooks`
+    );
+
+    const octokit = new Octokit({
+      auth: session.user.accessToken,
+    });
+
+    const response = await octokit.request(
+      `${GITHUB_API_BASE_URL}/repos/{owner}/{repo}/hooks`,
       {
+        owner: owner,
+        repo: repo,
         name: "web",
         active: true,
-        events: ["pull_request"],
+        events: ["push", "pull_request"],
         config: {
-          url: `${process.env.NEXT_PUBLIC_APP_URL}/api/github-webhook`,
+          url: siteConfig.url,
           content_type: "json",
           insecure_ssl: "0",
         },
-      },
-      {
         headers: {
-          Authorization: `token ${session.user.accessToken}`,
-          Accept: "application/vnd.github.v3+json",
+          "X-GitHub-Api-Version": "2022-11-28",
         },
       }
     );
 
-    return Response.json({ success: true, data: response.data });
+    return Response.json({ success: true, session, response });
   } catch (error) {
     console.error("Error creating webhook:", error);
     return Response.json(
