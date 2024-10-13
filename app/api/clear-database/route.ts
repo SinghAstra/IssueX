@@ -1,20 +1,15 @@
 import { db } from "@/lib/db";
 
 export async function GET() {
-  // Use DELETE instead of GET
   try {
-    // Step-by-step deletion to handle foreign key constraints
-    await db.verificationToken.deleteMany({});
-    console.log("Deleted verificationTokens");
+    await db.$transaction([
+      db.verificationToken.deleteMany(),
+      db.account.deleteMany(),
+      db.session.deleteMany(),
+      db.user.deleteMany(),
+    ]);
 
-    await db.account.deleteMany({});
-    console.log("Deleted accounts");
-
-    await db.session.deleteMany({});
-    console.log("Deleted sessions");
-
-    await db.user.findMany({});
-    console.log("Deleted users");
+    console.log("Database cleared successfully");
 
     return new Response(
       JSON.stringify({ message: "Database cleared successfully" }),
@@ -26,7 +21,7 @@ export async function GET() {
       }
     );
   } catch (error) {
-    console.error("Error clearing database:", error);
+    console.log("Error clearing database:", error);
     return new Response(
       JSON.stringify({
         message: "Error clearing database",
