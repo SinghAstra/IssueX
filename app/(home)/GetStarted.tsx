@@ -7,19 +7,16 @@ import React from "react";
 
 const GetStarted = () => {
   const router = useRouter();
-  //   const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
 
-  //   const isAuthenticated = status === "authenticated";
-  //   const isAuthenticating = status === "loading";
-
-  const isAuthenticated = false;
-  const isAuthenticating = false;
+  const isAuthenticated = status === "authenticated";
+  const isAuthenticating = status === "loading";
 
   const handleClick = () => {
     if (isAuthenticated) {
       router.push("/blog");
     } else if (!isAuthenticated && !isAuthenticating) {
-      router.push("/login");
+      router.push("/auth/sign-in");
     }
   };
 

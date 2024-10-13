@@ -152,7 +152,7 @@ const Navbar = () => {
                     Sign In
                   </Link>
                   <Link
-                    href="/auth/sign-up"
+                    href="/auth/sign-in"
                     className={buttonVariants({
                       size: "sm",
                       className: "bg-white",
