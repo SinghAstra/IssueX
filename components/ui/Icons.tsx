@@ -1,5 +1,7 @@
 import {
   ArrowRightIcon,
+  ChartCandlestick,
+  Cog,
   HelpCircleIcon,
   LineChartIcon,
   Link2Icon,
@@ -26,4 +28,6 @@ export const Icons = {
   close: X,
   next: ArrowRightIcon,
   spinner: LoaderCircle,
+  chat: ChartCandlestick,
+  settings: Cog,
 };

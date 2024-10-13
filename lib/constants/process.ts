@@ -11,18 +11,18 @@ export const PROCESS = [
     title: "Set Up Webhooks",
     description:
       "Configure webhooks to automatically trigger reviews when pull requests are created.",
-    icon: Cog8ToothIcon,
+    icon: Icons.settings,
   },
   {
     title: "Automate PR Reviews",
     description:
       "Leverage AI to automatically review your pull requests and provide actionable feedback.",
-    icon: ChatBubbleLeftIcon,
+    icon: Icons.chat,
   },
   {
     title: "Monitor Review Insights",
     description:
       "Track and analyze review performance to ensure code quality and team efficiency.",
-    icon: BarChart3Icon,
+    icon: Icons.chart,
   },
 ];
