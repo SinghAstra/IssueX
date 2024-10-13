@@ -22,10 +22,10 @@ export const authOptions: NextAuthConfig = {
     signIn: "/auth/sign-in",
   },
   secret: process.env.NEXT_AUTH_SECRET,
+  debug: true,
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
-        console.log("account is ", account);
         token.accessToken = account.access_token;
         token.id = account.providerAccountId;
       }
