@@ -14,7 +14,7 @@ const GetStarted = () => {
 
   const handleClick = () => {
     if (isAuthenticated) {
-      router.push("/webhook");
+      router.push("/projects");
     } else if (!isAuthenticated && !isAuthenticating) {
       router.push("/auth/sign-in");
     }
