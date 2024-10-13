@@ -9,8 +9,8 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { siteConfig } from "@/config/site";
 import { COMPANIES } from "@/lib/constants/companies";
 import { cn } from "@/lib/utils";
-import { Link } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import GetStarted from "./GetStarted";
 
 const HomePage = () => {
