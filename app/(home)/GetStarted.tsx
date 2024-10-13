@@ -20,12 +20,7 @@ const GetStarted = () => {
     }
   };
 
-  return isAuthenticating ? (
-    <Button variant="outline" size="lg">
-      <Icons.spinner className="animate-spin mr-2" />
-      Wait...
-    </Button>
-  ) : (
+  return (
     <Button
       onClick={handleClick}
       disabled={isAuthenticating}
