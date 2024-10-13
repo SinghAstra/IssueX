@@ -1,5 +1,5 @@
 import Providers from "@/components/providers/provider";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/assets/images/favicon.ico",
   },
-  manifest: `${siteConfig.url}/site.webmanifest`,
+  // manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
 export default function RootLayout({
@@ -56,8 +56,8 @@ export default function RootLayout({
         className={`min-h-screen bg-background text-foreground antialiased !font-default overflow-x-hidden`}
       >
         <Providers>
-          <Toaster richColors theme="dark" position="top-right" />
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>
