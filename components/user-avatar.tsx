@@ -31,7 +31,7 @@ export function UserAvatar() {
             alt={user?.name}
             width={36}
             height={36}
-            className="rounded-full hidden md:block border-2 border-primary"
+            className="rounded-full hidden md:block"
           />
         ) : (
           <span className="w-8 h-8 rounded-full flex items-center justify-center bg-primary">
