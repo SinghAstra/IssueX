@@ -3,6 +3,7 @@ import {
   ChartCandlestick,
   Cog,
   HelpCircleIcon,
+  LayoutGrid,
   LineChartIcon,
   Link2Icon,
   LoaderCircle,
@@ -30,4 +31,5 @@ export const Icons = {
   spinner: LoaderCircle,
   chat: ChartCandlestick,
   settings: Cog,
+  grid: LayoutGrid,
 };

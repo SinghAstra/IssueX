@@ -29,13 +29,25 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 
-const ToggleButton = ({ mode, currentMode, onClick, children }) => (
+interface ToggleButtonProps {
+  mode: string;
+  currentMode: string;
+  onClick: (mode: string) => void;
+  children: React.ReactNode;
+}
+
+const ToggleButton = ({
+  mode,
+  currentMode,
+  onClick,
+  children,
+}: ToggleButtonProps) => (
   <button
     onClick={() => onClick(mode)}
     className={`p-2 ${
       mode === currentMode
-        ? "bg-gray-200 text-gray-900"
-        : "bg-white text-gray-500 hover:text-gray-900"
+        ? "text-white bg-primary-foreground border-0"
+        : "text-gray-500 "
     } transition-colors duration-200`}
   >
     {children}
@@ -70,7 +82,7 @@ const Projects = () => {
         <div className="flex-grow">
           <Input
             type="text"
-            placeholder="Search repositories and projects..."
+            placeholder="🔍 Search repositories and projects..."
             className="w-full"
           />
         </div>
@@ -85,50 +97,20 @@ const Projects = () => {
             <DropdownMenuItem>Sort by activity</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="flex rounded-md overflow-hidden border border-gray-200">
+        <div className="flex rounded-md overflow-hidden border gap-2 p-1">
           <ToggleButton
             mode="grid"
             currentMode={viewMode}
             onClick={setViewMode}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 3h7v7H3z"></path>
-              <path d="M14 3h7v7h-7z"></path>
-              <path d="M14 14h7v7h-7z"></path>
-              <path d="M3 14h7v7H3z"></path>
-            </svg>
+            <Icons.grid className="h-4 w-4" />
           </ToggleButton>
           <ToggleButton
             mode="list"
             currentMode={viewMode}
             onClick={setViewMode}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M8 6h13"></path>
-              <path d="M8 12h13"></path>
-              <path d="M8 18h13"></path>
-              <path d="M3 6h.01"></path>
-              <path d="M3 12h.01"></path>
-              <path d="M3 18h.01"></path>
-            </svg>
+            <Icons.menu className="h-4 w-4" />
           </ToggleButton>
         </div>
       </div>
