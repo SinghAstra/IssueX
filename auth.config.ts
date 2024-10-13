@@ -24,12 +24,21 @@ export const authOptions: NextAuthConfig = {
   },
   secret: process.env.NEXT_AUTH_SECRET,
   callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        console.log("account is ", account);
+        token.accessToken = account.access_token;
+        token.id = account.providerAccountId;
+      }
+      return token;
+    },
     async session({ token, session }) {
       if (token && session.user) {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email ?? "";
         session.user.image = token.picture;
+        session.user.accessToken = token.accessToken;
       }
       return session;
     },
