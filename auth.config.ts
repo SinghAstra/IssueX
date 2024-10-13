@@ -25,7 +25,6 @@ export const authOptions: NextAuthConfig = {
   secret: process.env.NEXT_AUTH_SECRET,
   callbacks: {
     async session({ token, session }) {
-      console.log("token is ", token);
       if (token && session.user) {
         session.user.id = token.id;
         session.user.name = token.name;

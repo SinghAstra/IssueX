@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,16 +14,20 @@ import { homeNavLinks } from "@/config/home";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import AnimationContainer from "../global/animation-container";
 import MaxWidthWrapper from "../global/max-width-wrapper";
 import { Icons } from "../ui/Icons";
+import { UserAvatar } from "../user-avatar";
 import MobileNavbar from "./mobile-navbar";
 
 const Navbar = () => {
   const [scroll, setScroll] = useState(false);
-  const user = false;
+  const session = useSession();
+  const isAuthenticated = session.status === "authenticated" ? true : false;
+  const isAuthenticating = session.status === "loading" ? true : false;
 
   const handleScroll = () => {
     if (window.scrollY > 8) {
@@ -129,33 +133,35 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center">
-            {user ? (
-              <div className="flex items-center">
-                <Link
-                  href="/dashboard"
-                  className={buttonVariants({ size: "sm" })}
-                >
-                  Dashboard
-                </Link>
+            {isAuthenticating ? (
+              <Button variant="outline">
+                <Icons.spinner className="animate-spin mr-2" />
+                Wait...
+              </Button>
+            ) : isAuthenticated ? (
+              <div className="flex items-center gap-1 md:gap-1 lg:gap-4">
+                <UserAvatar />
               </div>
             ) : (
-              <div className="flex items-center gap-x-4">
-                <Link
-                  href="/auth/sign-in"
-                  className={buttonVariants({ size: "sm", variant: "ghost" })}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/auth/sign-up"
-                  className={buttonVariants({
-                    size: "sm",
-                    className: "bg-white",
-                  })}
-                >
-                  Get Started
-                  <Icons.zap className="size-4 ml-1.5 text-orange-500 fill-orange-500" />
-                </Link>
+              <div className="flex">
+                <div className="flex items-center gap-x-4">
+                  <Link
+                    href="/auth/sign-in"
+                    className={buttonVariants({ size: "sm", variant: "ghost" })}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/auth/sign-up"
+                    className={buttonVariants({
+                      size: "sm",
+                      className: "bg-white",
+                    })}
+                  >
+                    Get Started
+                    <Icons.zap className="size-4 ml-1.5 text-orange-500 fill-orange-500" />
+                  </Link>
+                </div>
               </div>
             )}
           </div>

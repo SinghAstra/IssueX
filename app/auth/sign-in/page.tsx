@@ -1,5 +1,4 @@
 import { signIn } from "@/auth";
-import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/Icons";
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
