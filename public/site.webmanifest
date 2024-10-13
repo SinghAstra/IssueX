@@ -1,0 +1,14 @@
+{
+  "name": "MergeX",
+  "short_name": "MergeX",
+  "icons": [
+    {
+      "src": "/assets/images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "hsl(217.2, 91.2%, 59.8%)",
+  "background_color": "hsl(222.2, 84%, 4.9%)",
+  "display": "standalone"
+}

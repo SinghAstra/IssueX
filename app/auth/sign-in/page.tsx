@@ -2,7 +2,13 @@ import { signIn } from "@/auth";
 import AnimationContainer from "@/components/global/animation-container";
 import { Icons } from "@/components/ui/Icons";
 import { siteConfig } from "@/config/site";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Sign In",
+  description: "Sign in to your account",
+};
 
 const SignInPage = () => {
   return (
