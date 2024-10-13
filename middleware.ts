@@ -15,11 +15,6 @@ export async function middleware(req: NextRequest) {
   const isAuthenticated = !!token;
   console.log("isAuthenticated is ", isAuthenticated);
 
-  // Redirect unauthenticated users from protected routes like /projects
-  if (!isAuthenticated && pathname.startsWith("/projects")) {
-    return NextResponse.redirect(new URL("/auth/sign-in", req.url));
-  }
-
   // Redirect authenticated users away from auth routes like /auth/sign-in
   if (isAuthenticated && pathname.startsWith("/auth/sign-in")) {
     return NextResponse.redirect(new URL("/", req.url));
