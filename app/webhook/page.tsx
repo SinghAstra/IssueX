@@ -76,7 +76,7 @@ const WebhookSetup = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/createWebhook", {
+      const response = await fetch("/api/create-web-hook", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
