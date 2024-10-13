@@ -8,8 +8,8 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { siteConfig } from "@/config/site";
 import { COMPANIES } from "@/lib/constants/companies";
 import { cn } from "@/lib/utils";
-import { Link } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import GetStarted from "./GetStarted";
 
@@ -18,7 +18,7 @@ const NonAuthLanding = () => {
     <>
       {/* Hero Section */}
       <MaxWidthWrapper>
-        <div className="flex flex-col items-center justify-center w-full text-center bg-gradient-to-t from-background">
+        <div className="flex flex-col items-center justify-center w-full text-center bg-gradient-to-t from-background mt-20">
           <AnimationContainer className="flex flex-col items-center justify-center w-full text-center">
             <Link
               href={siteConfig.links.twitter}
