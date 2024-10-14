@@ -123,7 +123,7 @@ const Projects = () => {
             <CardDescription>Manage your existing webhooks</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full">
+            <Button className="w-full" disabled={true}>
               <Webhook className="mr-2 h-4 w-4" /> Manage Webhooks
             </Button>
           </CardContent>
@@ -135,14 +135,14 @@ const Projects = () => {
             <CardDescription>Configure your MergeX account</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full">
+            <Button className="w-full" disabled={true}>
               <Settings className="mr-2 h-4 w-4" /> Account Settings
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card className="mb-10">
         <CardHeader>
           <CardTitle>Repositories with Webhooks</CardTitle>
           <CardDescription>

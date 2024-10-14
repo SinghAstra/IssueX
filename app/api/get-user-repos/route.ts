@@ -22,6 +22,9 @@ export async function GET() {
       id: repo.id,
       name: repo.name,
       full_name: repo.full_name,
+      private: repo.private,
+      html_url: repo.html_url,
+      updated_at: repo.updated_at,
     }));
 
     return Response.json({ repos });

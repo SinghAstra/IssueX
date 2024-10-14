@@ -10,32 +10,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Dot, Search } from "lucide-react";
-import React, { useState } from "react";
+import axios from "axios";
+import { formatDistanceToNowStrict } from "date-fns";
+import { Dot, Lock, Search } from "lucide-react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 interface Repository {
   id: number;
   name: string;
-  updatedAt: string;
+  html_url: string;
+  updated_at: string;
+  private: boolean;
 }
-
-const mockRepositories: Repository[] = [
-  {
-    id: 1,
-    name: "project-1",
-    updatedAt: "2 days ago",
-  },
-  {
-    id: 2,
-    name: "awesome-app",
-    updatedAt: "1 week ago",
-  },
-  {
-    id: 3,
-    name: "my-website",
-    updatedAt: "1 month ago",
-  },
-];
 
 function GitHubIcon() {
   return (
@@ -52,12 +39,31 @@ function GitHubIcon() {
 
 export default function ConnectRepo() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [repositories, setRepositories] =
-    useState<Repository[]>(mockRepositories);
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const filteredRepositories = repositories.filter((repo) =>
     repo.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  useEffect(() => {
+    const fetchRepos = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.get("/api/get-user-repos");
+        setRepositories(response.data.repos);
+      } catch (error) {
+        console.error("Error fetching repositories:", error);
+        setError("Failed to load repositories");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRepos();
+  }, []);
 
   return (
     <div className="min-h-screen text-white">
@@ -82,35 +88,65 @@ export default function ConnectRepo() {
                 <Search className="h-4 w-4 mr-2" /> Search
               </Button>
             </div>
-            <div className="rounded-md overflow-hidden">
-              {filteredRepositories.map((repo, index) => (
-                <div
-                  key={repo.id}
-                  className={`flex items-center justify-between p-4 border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800 cursor-pointer ${
-                    index === 0 ? "rounded-t-md" : ""
-                  } ${
-                    index === filteredRepositories.length - 1
-                      ? "rounded-b-md"
-                      : ""
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <GitHubIcon />
-                    <div className="flex items-center justify-center gap-2">
-                      <h3 className="text-sm font-semibold ">{repo.name}</h3>
-                      <p className="text-xs text-gray-400 flex items-center gap-0.2">
-                        <Dot className="h-8 w-8 text-gray-400 " />
-                        {repo.updatedAt}
-                      </p>
-                    </div>
+            {loading ? (
+              <p>Loading repositories...</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : (
+              <div className="rounded-md overflow-hidden">
+                {filteredRepositories.map((repo, index) => (
+                  // I want this div to be link to html_url but import button has to generate web hook so handle it accordingly
+                  <div
+                    key={repo.id}
+                    className={`flex items-center justify-between p-4 border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800 cursor-pointer ${
+                      index === 0 ? "rounded-t-md" : ""
+                    } ${
+                      index === filteredRepositories.length - 1
+                        ? "rounded-b-md"
+                        : ""
+                    }`}
+                  >
+                    <Link
+                      href={repo.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-3 flex-1"
+                    >
+                      <GitHubIcon />
+                      <div className="flex items-center justify-center gap-2">
+                        <h3 className="text-sm font-semibold ">{repo.name}</h3>
+                        {repo.private && (
+                          <Lock className="h-4 w-4 text-gray-400" />
+                        )}
+                        <p className="text-xs text-gray-400 flex items-center gap-0.2">
+                          <Dot className="h-8 w-8 text-gray-400 " />
+                          {formatDistanceToNowStrict(
+                            new Date(repo.updated_at),
+                            {
+                              addSuffix: true,
+                            }
+                          )}
+                        </p>
+                      </div>
+                    </Link>
+                    <Button className="text-white">Import</Button>
                   </div>
-                  <Button className="text-white">Import</Button>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
+
+// The response is of format
+// {
+//   "id": 862740043,
+//   "name": "Build",
+//   "full_name": "SinghAstra/Build",
+//   "private": true,
+//   "html_url": "https://github.com/SinghAstra/Build",
+//   "updated_at": "2024-10-02T18:48:22Z"
+// },
