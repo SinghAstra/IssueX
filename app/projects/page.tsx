@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,8 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/Icons";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { UserAvatar } from "@/components/user-avatar";
+import { cn } from "@/lib/utils";
 import {
   ChevronDown,
   GitBranch,
@@ -27,6 +26,7 @@ import {
   Settings,
   Webhook,
 } from "lucide-react";
+import Link from "next/link";
 import React, { useState } from "react";
 
 interface ToggleButtonProps {
@@ -56,8 +56,6 @@ const ToggleButton = ({
 
 const Projects = () => {
   const [viewMode, setViewMode] = useState("grid");
-  const user = { name: "John Doe" };
-
   const repositories = [
     { name: "repo-1", lastWebhook: "2 minutes ago" },
     { name: "repo-2", lastWebhook: "1 hour ago" },
@@ -65,19 +63,7 @@ const Projects = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <header className="mb-8 flex justify-between items-center">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center">
-            <Icons.logo className="mr-4" />
-            <h2 className="text-xl ">MergeX / </h2>
-            <h1 className="text-xl">{user.name}</h1>
-          </div>
-          <p className="text-gray-400">Manage your repositories and webhooks</p>
-        </div>
-        <UserAvatar />
-      </header>
-
+    <div className="container mx-auto px-4">
       <div className="flex items-center space-x-4 mb-8">
         <div className="flex-grow">
           <Input
@@ -122,9 +108,12 @@ const Projects = () => {
             <CardDescription>Set up a new repo with webhooks</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full">
+            <Link
+              href="/projects/connect-repo"
+              className={cn(buttonVariants({ className: "w-full" }))}
+            >
               <Plus className="mr-2 h-4 w-4" /> New Repository
-            </Button>
+            </Link>
           </CardContent>
         </Card>
 
