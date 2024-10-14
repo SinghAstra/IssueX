@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Dot, Lock, Search } from "lucide-react";
@@ -19,6 +20,7 @@ import React, { useEffect, useState } from "react";
 interface Repository {
   id: number;
   name: string;
+  repoFullName: string;
   html_url: string;
   updated_at: string;
   private: boolean;
@@ -65,6 +67,21 @@ export default function ConnectRepo() {
     fetchRepos();
   }, []);
 
+  const handleConnect = async (repoFullName: string) => {
+    try {
+      const response = await axios.post("/api/create-web-hook", {
+        repoFullName,
+      });
+      toast({
+        title: "Connected Successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to connect",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen text-white">
       <div className="max-w-4xl mx-auto">
@@ -95,7 +112,6 @@ export default function ConnectRepo() {
             ) : (
               <div className="rounded-md overflow-hidden">
                 {filteredRepositories.map((repo, index) => (
-                  // I want this div to be link to html_url but import button has to generate web hook so handle it accordingly
                   <div
                     key={repo.id}
                     className={`flex items-center justify-between p-4 border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800 cursor-pointer ${
@@ -129,7 +145,12 @@ export default function ConnectRepo() {
                         </p>
                       </div>
                     </Link>
-                    <Button className="text-white">Import</Button>
+                    <Button
+                      className="text-white"
+                      onClick={() => handleConnect(repo.repoFullName)}
+                    >
+                      Connect
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -140,13 +161,3 @@ export default function ConnectRepo() {
     </div>
   );
 }
-
-// The response is of format
-// {
-//   "id": 862740043,
-//   "name": "Build",
-//   "full_name": "SinghAstra/Build",
-//   "private": true,
-//   "html_url": "https://github.com/SinghAstra/Build",
-//   "updated_at": "2024-10-02T18:48:22Z"
-// },

@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { siteConfig } from "@/config/site";
+import { db } from "@/lib/db";
 import { Octokit } from "@octokit/core";
-import { NextResponse } from "next/server";
 
 const GITHUB_API_BASE_URL = "https://api.github.com";
 
@@ -9,15 +9,11 @@ export async function POST(request: Request) {
   try {
     const session = await auth();
 
-    console.log("session --createWebHook is ", session);
-
     if (!session || !session.user?.accessToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { repoFullName } = await request.json();
-
-    console.log("repoFullName is ", repoFullName);
 
     const [owner, repo] = repoFullName.split("/");
 
@@ -27,11 +23,6 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
-    console.log(
-      "`${GITHUB_API_BASE_URL}/repos/${repoFullName}/hooks` is ",
-      `${GITHUB_API_BASE_URL}/repos/${repoFullName}/hooks`
-    );
 
     const octokit = new Octokit({
       auth: session.user.accessToken,
@@ -56,11 +47,35 @@ export async function POST(request: Request) {
       }
     );
 
-    return Response.json({ success: true, session, response });
+    const email = session.user.email ?? undefined;
+
+    if (!email) {
+      return Response.json({ error: "User email not found" }, { status: 400 });
+    }
+
+    const user = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return Response.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const webhook = await db.webhook.create({
+      data: {
+        userId: user.id,
+        repositoryName: repoFullName,
+      },
+    });
+
+    return Response.json({
+      message: "Connected Successfully.",
+      session,
+      response,
+    });
   } catch (error) {
-    console.error("Error creating webhook:", error);
     return Response.json(
-      { success: false, error: "Failed to create webhook" },
+      { success: false, message: "Failed to connect Repository" },
       { status: 500 }
     );
   }

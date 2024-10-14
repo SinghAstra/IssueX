@@ -21,7 +21,7 @@ export async function GET() {
     const repos = response.data.map((repo: any) => ({
       id: repo.id,
       name: repo.name,
-      full_name: repo.full_name,
+      repoFullName: repo.full_name,
       private: repo.private,
       html_url: repo.html_url,
       updated_at: repo.updated_at,
@@ -29,7 +29,6 @@ export async function GET() {
 
     return Response.json({ repos });
   } catch (error) {
-    console.error("Error fetching user repos:", error);
     return Response.json(
       { error: "Failed to fetch repositories" },
       { status: 500 }
