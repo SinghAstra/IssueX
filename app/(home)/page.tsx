@@ -9,11 +9,27 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { siteConfig } from "@/config/site";
 import { COMPANIES } from "@/lib/constants/companies";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import GetStarted from "./GetStarted";
 
 const HomePage = () => {
+  const session = useSession();
+  const router = useRouter();
+  const isAuthenticated = session.status === "authenticated";
+  const isAuthenticating = session.status === "loading";
+  console.log("isAuthenticated --signInPage is ", isAuthenticated);
+  console.log("isAuthenticating --signInPage is ", isAuthenticating);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/projects");
+    }
+  }, [isAuthenticated, router]);
+
   return (
     <>
       <MaxWidthWrapper>

@@ -1,16 +1,28 @@
-import { signIn } from "@/auth";
+"use client";
 import AnimationContainer from "@/components/global/animation-container";
+import { Card, CardContent } from "@/components/ui/card";
 import { Icons } from "@/components/ui/Icons";
 import { siteConfig } from "@/config/site";
-import { Metadata } from "next";
+import { Loader2 } from "lucide-react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Sign In",
-  description: "Sign in to your account",
-};
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const SignInPage = () => {
+  const session = useSession();
+  const router = useRouter();
+  const isAuthenticated = session.status === "authenticated";
+  const isAuthenticating = session.status === "loading";
+  console.log("isAuthenticated --signInPage is ", isAuthenticated);
+  console.log("isAuthenticating --signInPage is ", isAuthenticating);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/projects");
+    }
+  }, [isAuthenticated, router]);
+
   return (
     <div className="flex flex-col items-start max-w-sm mx-auto min-h-screen overflow-hidden pt-4">
       <AnimationContainer
@@ -23,17 +35,21 @@ const SignInPage = () => {
           <h1 className="text-lg font-medium">{siteConfig.name}</h1>
         </Link>
       </AnimationContainer>
+
       <AnimationContainer delay={0.2}>
         <div className="flex mt-16 mb-8 items-center justify-center flex-col gap-2 w-full">
-          <form
-            action={async () => {
-              "use server";
-              await signIn("github");
-            }}
-            className="w-full px-8"
-          >
+          {isAuthenticating ? (
+            <Card className="w-full max-w-md mx-auto ">
+              <CardContent className="flex flex-col items-center justify-center p-10">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <p className="mt-4 text-lg font-medium text-gray-300">
+                  {isAuthenticating ? "Authenticating..." : "Redirecting..."}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
             <button
-              type="submit"
+              onClick={() => signIn("github")}
               className="relative inline-flex h-10 overflow-hidden rounded-full p-[1.5px] w-full"
             >
               <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--primary))_0%,hsl(var(--primary-foreground))_50%,hsl(var(--primary))_100%)]" />
@@ -43,8 +59,9 @@ const SignInPage = () => {
                 <Icons.next className="ml-2 size-6 animate-moveLeftRight" />
               </span>
             </button>
-          </form>
+          )}
         </div>
+
         <div className="flex flex-col items-start w-full">
           <p className="text-sm text-muted-foreground">
             By signing in, you agree to our{" "}
