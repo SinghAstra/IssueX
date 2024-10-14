@@ -4,16 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Icons } from "@/components/ui/Icons";
 import { siteConfig } from "@/config/site";
 import { Loader2 } from "lucide-react";
-import { Metadata } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-export const metadata: Metadata = {
-  title: "Sign In",
-  description: "Sign in to your Mergex account",
-};
 
 const SignInPage = () => {
   const session = useSession();
