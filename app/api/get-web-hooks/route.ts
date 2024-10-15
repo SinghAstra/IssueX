@@ -42,6 +42,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error fetching webhooks:", error);
-    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { message: "Internal Server Error", error },
+      { status: 500 }
+    );
   }
 }
