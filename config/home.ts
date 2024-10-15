@@ -3,62 +3,62 @@ import { Icons } from "@/components/ui/Icons";
 export const homeNavLinks = [
   {
     title: "Features",
-    href: "/features",
+    href: "/",
     menu: [
       {
         title: "Link Shortening",
         tagline: "Shorten links and track their performance.",
-        href: "/features/link-shortening",
+        href: "/",
         icon: Icons.help,
       },
       {
         title: "Password Protection",
         tagline: "Secure your links with a password.",
-        href: "/features/password-protection",
+        href: "/",
         icon: Icons.lock,
       },
       {
         title: "Advanced Analytics",
         tagline: "Gain insights into who is clicking your links.",
-        href: "/features/analytics",
+        href: "/",
         icon: Icons.chart,
       },
       {
         title: "Custom QR Codes",
         tagline: "Use QR codes to reach your audience.",
-        href: "/features/qr-codes",
+        href: "/",
         icon: Icons.qr,
       },
     ],
   },
   {
     title: "Pricing",
-    href: "/pricing",
+    href: "/",
   },
   {
     title: "Enterprise",
-    href: "/enterprise",
+    href: "/",
   },
   {
     title: "Resources",
-    href: "/resources",
+    href: "/",
     menu: [
       {
         title: "Blog",
         tagline: "Read articles on the latest trends in tech.",
-        href: "/resources/blog",
+        href: "/",
         icon: Icons.news,
       },
       {
         title: "Help",
         tagline: "Get answers to your questions.",
-        href: "/resources/help",
+        href: "/",
         icon: Icons.help,
       },
     ],
   },
   {
     title: "Changelog",
-    href: "/changelog",
+    href: "/",
   },
 ];

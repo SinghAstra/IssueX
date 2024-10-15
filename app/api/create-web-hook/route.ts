@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         active: true,
         events: ["push", "pull_request"],
         config: {
-          url: siteConfig.url,
+          url: siteConfig.url + "/api/webhook",
           content_type: "json",
           insecure_ssl: "0",
         },
@@ -46,6 +46,8 @@ export async function POST(request: Request) {
         },
       }
     );
+
+    console.log("response --create-web-hook is ", response);
 
     const email = session.user.email ?? undefined;
 
