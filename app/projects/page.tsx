@@ -123,7 +123,7 @@ const Projects = () => {
       try {
         const response = await fetch("/api/get-web-hooks");
         const data = await response.json();
-        setConnectedRepos(data.webhooks);
+        setConnectedRepos(data.webhooks ? data.webhooks : []);
       } catch (error) {
         console.log(error);
       } finally {
