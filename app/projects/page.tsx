@@ -16,24 +16,33 @@ import {
 import { Icons } from "@/components/ui/Icons";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { formatDistanceToNowStrict } from "date-fns";
 import {
+  BoxesIcon,
   ChevronDown,
+  Dot,
   GitBranch,
-  LayoutGrid,
-  List,
   Plus,
-  Search,
   Settings,
   Webhook,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ToggleButtonProps {
   mode: string;
   currentMode: string;
   onClick: (mode: string) => void;
   children: React.ReactNode;
+}
+
+interface Repository {
+  id: string;
+  userId: string;
+  repoFullName: string;
+  lastTriggered: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const ToggleButton = ({
@@ -54,13 +63,76 @@ const ToggleButton = ({
   </button>
 );
 
+function GitHubIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className="h-4 w-4 mr-2"
+      fill="currentColor"
+    >
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.261.82-.577v-2.165c-3.338.727-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.757-1.333-1.757-1.09-.744.082-.729.082-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.833 2.809 1.304 3.494.996.107-.774.418-1.305.76-1.605-2.665-.305-5.466-1.333-5.466-5.933 0-1.312.468-2.381 1.236-3.221-.123-.303-.535-1.525.117-3.176 0 0 1.01-.323 3.3 1.23.958-.266 1.985-.399 3.005-.404 1.02.005 2.047.138 3.006.404 2.29-1.553 3.298-1.23 3.298-1.23.653 1.651.241 2.873.118 3.176.77.84 1.235 1.909 1.235 3.221 0 4.61-2.804 5.625-5.475 5.921.43.37.814 1.102.814 2.222v3.293c0 .318.218.694.824.576C20.565 21.798 24 17.303 24 12 24 5.373 18.627 0 12 0z" />
+    </svg>
+  );
+}
+
+const SkeletonRepo = () => (
+  <div className="flex items-center justify-between p-4 border border-gray-800 animate-pulse">
+    <div className="flex items-center space-x-3 flex-1">
+      <div className="w-4 h-4 bg-gray-600 rounded-full"></div>
+      <div className="flex flex-col space-y-1">
+        <div className="h-4 bg-gray-800 rounded w-48"></div>
+        <div className="h-3 bg-gray-800 rounded w-24"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const EmptyState = () => (
+  <div className="text-center py-10">
+    <BoxesIcon className="mx-auto h-12 w-12 text-gray-400" />
+    <h3 className="mt-2 text-sm font-semibold text-gray-600">
+      No repositories
+    </h3>
+    <p className="mt-1 text-sm text-gray-500">
+      Get started by connecting a new repository.
+    </p>
+    <div className="mt-6">
+      <Link
+        href="/projects/connect-repo"
+        className={cn(buttonVariants({ className: "mx-auto" }))}
+      >
+        <Plus className="mr-2 h-4 w-4" /> New Repository
+      </Link>
+    </div>
+  </div>
+);
+
 const Projects = () => {
   const [viewMode, setViewMode] = useState("grid");
-  const repositories = [
-    { name: "repo-1", lastWebhook: "2 minutes ago" },
-    { name: "repo-2", lastWebhook: "1 hour ago" },
-    { name: "repo-3", lastWebhook: "1 day ago" },
-  ];
+  const [connectedRepos, setConnectedRepos] = useState<Repository[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredRepos = connectedRepos.filter((repo) =>
+    repo.repoFullName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    const fetchWebhooks = async () => {
+      try {
+        const response = await fetch("/api/get-web-hooks");
+        const data = await response.json();
+        setConnectedRepos(data.webhooks);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWebhooks();
+  }, []);
 
   return (
     <div className="container mx-auto px-4">
@@ -150,33 +222,55 @@ const Projects = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ul
-            className={`space-y-4 ${
-              viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-4" : ""
-            }`}
-          >
-            {repositories.map((repo, index) => (
-              <li
-                key={index}
-                className={`flex items-center justify-between ${
-                  viewMode === "list"
-                    ? "border-b pb-2 last:border-b-0"
-                    : "border p-4 rounded-lg"
-                }`}
-              >
-                <div className="flex items-center">
-                  <GitBranch className="mr-2 h-4 w-4" />
-                  <span className="font-medium">{repo.name}</span>
+          {loading ? (
+            <div className="rounded-md overflow-hidden">
+              <SkeletonRepo />
+              <SkeletonRepo />
+              <SkeletonRepo />
+            </div>
+          ) : filteredRepos.length > 0 ? (
+            <div className="rounded-md overflow-hidden">
+              {filteredRepos.map((repo, index) => (
+                <div
+                  key={repo.id}
+                  className={`flex items-center justify-between p-4 border border-gray-800 transition-all duration-200 ease-in-out hover:bg-gray-800 cursor-pointer ${
+                    index === 0 ? "rounded-t-md" : ""
+                  } ${
+                    index === filteredRepos.length - 1 ? "rounded-b-md" : ""
+                  }`}
+                >
+                  <Link
+                    href={`https://github.com/${repo.repoFullName}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-3 flex-1"
+                  >
+                    <GitHubIcon />
+                    <div className="flex items-center justify-center gap-2">
+                      <h3 className="text-sm font-semibold ">
+                        {repo.repoFullName}
+                      </h3>
+                      <p className="text-xs text-gray-400 flex items-center gap-0.2">
+                        {repo.lastTriggered && (
+                          <>
+                            <Dot className="h-8 w-8 text-gray-400" />
+                            {formatDistanceToNowStrict(
+                              new Date(repo.lastTriggered),
+                              {
+                                addSuffix: true,
+                              }
+                            )}
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </Link>
                 </div>
-                <div className="flex items-center">
-                  <Webhook className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Last triggered: {repo.lastWebhook}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          ) : (
+            <EmptyState />
+          )}
         </CardContent>
       </Card>
     </div>

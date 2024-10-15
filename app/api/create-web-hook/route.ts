@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     const webhook = await db.webhook.create({
       data: {
         userId: user.id,
-        repositoryName: repoFullName,
+        repoFullName: repoFullName,
       },
     });
 

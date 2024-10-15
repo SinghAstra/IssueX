@@ -11,8 +11,6 @@ export async function GET() {
 
     const email = session.user.email ?? undefined;
 
-    console.log("email is ", email);
-
     if (!email) {
       return Response.json(
         { message: "User email not found" },
@@ -34,10 +32,9 @@ export async function GET() {
       where: {
         userId: user.id,
       },
-      // orderBy: {
-      //   createdAt: "desc",
-      // },
     });
+
+    console.log("webhooks is ", webhooks);
 
     return Response.json({
       message: "Webhooks fetched successfully",

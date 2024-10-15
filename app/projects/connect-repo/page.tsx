@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
-import { Dot, Lock, Search } from "lucide-react";
+import { BoxesIcon, Dot, Lock, Search } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -39,6 +39,36 @@ function GitHubIcon() {
   );
 }
 
+const SkeletonRepo = () => (
+  <div className="flex items-center justify-between p-4 border border-gray-800 animate-pulse">
+    <div className="flex items-center space-x-3 flex-1">
+      <div className="w-4 h-4 bg-gray-600 rounded-full"></div>
+      <div className="flex flex-col space-y-1">
+        <div className="h-4 bg-gray-800 rounded w-48"></div>
+        <div className="h-3 bg-gray-800 rounded w-24"></div>
+      </div>
+    </div>
+    <div className="h-8 bg-gray-800 rounded w-20"></div>
+  </div>
+);
+
+const EmptyState = () => (
+  <div className="text-center py-10">
+    <BoxesIcon className="mx-auto h-12 w-12 text-gray-400" />
+    <h3 className="mt-2 text-sm font-semibold text-gray-600">
+      No repositories found
+    </h3>
+    <p className="mt-1 text-sm text-gray-500">
+      We couldn't find any repositories associated with your account.
+    </p>
+    <div className="mt-6">
+      <Button variant="outline">
+        <Search className="mr-2 h-4 w-4" /> Refresh Repositories
+      </Button>
+    </div>
+  </div>
+);
+
 export default function ConnectRepo() {
   const [searchTerm, setSearchTerm] = useState("");
   const [repositories, setRepositories] = useState<Repository[]>([]);
@@ -55,7 +85,7 @@ export default function ConnectRepo() {
 
       try {
         const response = await axios.get("/api/get-user-repos");
-        setRepositories(response.data.repos);
+        // setRepositories(response.data.repos);
       } catch (error) {
         console.error("Error fetching repositories:", error);
         setError("Failed to load repositories");
@@ -106,10 +136,14 @@ export default function ConnectRepo() {
               </Button>
             </div>
             {loading ? (
-              <p>Loading repositories...</p>
+              <div className="rounded-md overflow-hidden">
+                <SkeletonRepo />
+                <SkeletonRepo />
+                <SkeletonRepo />
+              </div>
             ) : error ? (
               <p className="text-red-500">{error}</p>
-            ) : (
+            ) : filteredRepositories.length > 0 ? (
               <div className="rounded-md overflow-hidden">
                 {filteredRepositories.map((repo, index) => (
                   <div
@@ -154,6 +188,8 @@ export default function ConnectRepo() {
                   </div>
                 ))}
               </div>
+            ) : (
+              <EmptyState />
             )}
           </CardContent>
         </Card>
