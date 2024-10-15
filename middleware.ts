@@ -20,5 +20,10 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/projects", "/projects/connect-repo", "/auth/sign-in"],
+  matcher: [
+    "/projects",
+    "/projects/connect-repo",
+    "/auth/sign-in",
+    "/api/get-web-hooks",
+  ],
 };
