@@ -17,10 +17,13 @@ export async function POST(request: Request) {
   const { pull_request, repository } = payload;
   const repoFullName = repository.full_name;
 
-  // Find the webhook in the database
   const webhook = await db.webhook.findFirst({
     where: { repoFullName },
-    include: { user: true },
+    include: {
+      user: {
+        include: { accounts: true },
+      },
+    },
   });
 
   if (!webhook) {
@@ -68,7 +71,7 @@ export async function POST(request: Request) {
   );
 
   // Update the lastTriggered timestamp
-  await prisma.webhook.update({
+  await db.webhook.update({
     where: { id: webhook.id },
     data: { lastTriggered: new Date() },
   });
