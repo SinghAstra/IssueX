@@ -85,7 +85,7 @@ export default function ConnectRepo() {
 
       try {
         const response = await axios.get("/api/get-user-repos");
-        // setRepositories(response.data.repos);
+        setRepositories(response.data.repos);
       } catch (error) {
         console.error("Error fetching repositories:", error);
         setError("Failed to load repositories");
