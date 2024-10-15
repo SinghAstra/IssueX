@@ -14,8 +14,6 @@ const SignInPage = () => {
   const router = useRouter();
   const isAuthenticated = session.status === "authenticated";
   const isAuthenticating = session.status === "loading";
-  console.log("isAuthenticated --signInPage is ", isAuthenticated);
-  console.log("isAuthenticating --signInPage is ", isAuthenticating);
 
   useEffect(() => {
     if (isAuthenticated) {

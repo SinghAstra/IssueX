@@ -7,7 +7,7 @@ import React from "react";
 
 const GetStarted = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const isAuthenticated = status === "authenticated";
   const isAuthenticating = status === "loading";

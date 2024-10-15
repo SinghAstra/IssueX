@@ -37,7 +37,7 @@ const Footer = () => {
                 <ul className="mt-4 text-sm text-muted-foreground">
                   <li className="mt-2">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Features
@@ -45,7 +45,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Pricing
@@ -53,7 +53,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Testimonials
@@ -61,7 +61,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Integration
@@ -78,7 +78,7 @@ const Footer = () => {
                 <ul className="mt-4 text-sm text-muted-foreground">
                   <li className="">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Facebook
@@ -86,7 +86,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Instagram
@@ -119,7 +119,7 @@ const Footer = () => {
                 <ul className="mt-4 text-sm text-muted-foreground">
                   <li className="mt-2">
                     <Link
-                      href="/resources/blog"
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Blog
@@ -127,7 +127,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href="/resources/help"
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Support
@@ -142,7 +142,7 @@ const Footer = () => {
                 <ul className="mt-4 text-sm text-muted-foreground">
                   <li className="">
                     <Link
-                      href=""
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       About Us
@@ -150,7 +150,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href="/privacy"
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Privacy Policy
@@ -158,7 +158,7 @@ const Footer = () => {
                   </li>
                   <li className="mt-2">
                     <Link
-                      href="/terms"
+                      href="/"
                       className="hover:text-foreground transition-all duration-300"
                     >
                       Terms & Conditions

@@ -11,8 +11,6 @@ interface Props {
 const Providers = ({ children }: Props) => {
   const client = new QueryClient();
 
-  console.log("client is ", client);
-
   return (
     <QueryClientProvider client={client}>
       <SessionProvider>{children}</SessionProvider>

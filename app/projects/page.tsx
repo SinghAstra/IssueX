@@ -125,7 +125,7 @@ const Projects = () => {
         const data = await response.json();
         setConnectedRepos(data.webhooks ? data.webhooks : []);
       } catch (error) {
-        console.log(error);
+        console.log("error --projects is ", error);
       } finally {
         setLoading(false);
       }
