@@ -28,10 +28,11 @@ export async function POST(request: Request) {
       auth: session.user.accessToken,
     });
 
-    const webhookUrl = siteConfig.url + "/api/webhook";
+    const webhookUrl = `${siteConfig.url}/api/webhook`;
+    const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
 
     const response = await octokit.request(
-      `${GITHUB_API_BASE_URL}/repos/{owner}/{repo}/hooks`,
+      `POST ${GITHUB_API_BASE_URL}/repos/{owner}/{repo}/hooks`,
       {
         owner: owner,
         repo: repo,
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
           url: webhookUrl,
           content_type: "json",
           insecure_ssl: "0",
+          secret: webhookSecret,
         },
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
@@ -49,7 +51,28 @@ export async function POST(request: Request) {
       }
     );
 
-    console.log("response --create-web-hook is ", response);
+    console.log(
+      "response --from-github-when-trying-to-create-webhook is ",
+      response
+    );
+
+    if (response.status !== 201) {
+      console.error("Unexpected response from GitHub API:", response);
+      return Response.json(
+        { error: "Failed to create webhook on GitHub" },
+        { status: response.status }
+      );
+    }
+
+    if (!response.data || typeof response.data !== "object") {
+      console.error("Unexpected response data from GitHub API:", response.data);
+      return Response.json(
+        { error: "Invalid response from GitHub API" },
+        { status: 500 }
+      );
+    }
+
+    console.log("Webhook created:", response.data);
 
     const email = session.user.email ?? undefined;
 
@@ -78,6 +101,8 @@ export async function POST(request: Request) {
       response,
     });
   } catch (error) {
+    console.log("error --from-github-when-trying-to-create-webhook is ", error);
+
     return Response.json(
       { success: false, message: "Failed to connect Repository" },
       { status: 500 }
