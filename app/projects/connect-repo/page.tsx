@@ -98,17 +98,41 @@ export default function ConnectRepo() {
   }, []);
 
   const handleConnect = async (repoFullName: string) => {
+    const button = document.querySelector(
+      `button[data-repo="${repoFullName}"]`
+    ) as HTMLButtonElement | null;
+
+    if (!button) {
+      console.error(`Button for repository ${repoFullName} not found`);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Connecting...";
+
     try {
       const response = await axios.post("/api/create-web-hook", {
         repoFullName,
       });
       toast({
         title: "Connected Successfully",
+        description: `Webhook created for ${repoFullName}`,
       });
+      button.textContent = "Connected";
     } catch (error) {
+      console.log("error --handleConnect is ", error);
       toast({
         title: "Failed to connect",
+        description: "An unknown error occurred. Please try again.",
+        variant: "destructive",
       });
+      button.disabled = false;
+      button.textContent = "Connect";
     }
   };
 
@@ -182,6 +206,7 @@ export default function ConnectRepo() {
                     <Button
                       className="text-white"
                       onClick={() => handleConnect(repo.repoFullName)}
+                      data-repo={repo.repoFullName}
                     >
                       Connect
                     </Button>

@@ -22,8 +22,6 @@ export async function GET() {
       where: { email },
     });
 
-    console.log("user is ", user);
-
     if (!user) {
       return Response.json({ message: "User not found" }, { status: 404 });
     }
@@ -34,14 +32,11 @@ export async function GET() {
       },
     });
 
-    console.log("webhooks is ", webhooks);
-
     return Response.json({
       message: "Webhooks fetched successfully",
       webhooks,
     });
   } catch (error) {
-    console.error("Error fetching webhooks:", error);
     return Response.json(
       { message: "Internal Server Error", error },
       { status: 500 }

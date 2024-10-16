@@ -28,6 +28,8 @@ export async function POST(request: Request) {
       auth: session.user.accessToken,
     });
 
+    const webhookUrl = siteConfig.url + "/api/webhook";
+
     const response = await octokit.request(
       `${GITHUB_API_BASE_URL}/repos/{owner}/{repo}/hooks`,
       {
@@ -37,7 +39,7 @@ export async function POST(request: Request) {
         active: true,
         events: ["push", "pull_request"],
         config: {
-          url: siteConfig.url + "/api/webhook",
+          url: webhookUrl,
           content_type: "json",
           insecure_ssl: "0",
         },
