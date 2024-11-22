@@ -1,13 +1,13 @@
-import { SiteConfig } from "@/types";
+import { SiteConfig } from "@/types/site";
 
 export const siteConfig: SiteConfig = {
-  name: "MergeX",
+  name: "IssueX",
   description:
-    "MergeX revolutionizes the way developers approach code reviews by harnessing the power of artificial intelligence.",
-  url: "https://mergex.vercel.app",
+    "An automated system to enhance GitHub issue management through AI-powered analysis and templating.",
+  url: "https://issuex.vercel.app",
   links: {
     twitter: "https://x.com/XSinghAstra",
-    github: "https://github.com/SinghAstra/MergeX",
+    github: "https://github.com/SinghAstra/IssueX",
     linkedIn: "https://www.linkedin.com/in/singhastra",
   },
 };

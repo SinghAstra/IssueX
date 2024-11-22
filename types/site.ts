@@ -1,5 +1,3 @@
-import { Icons } from "@/components/ui/Icons";
-
 export type SiteConfig = {
   name: string;
   description: string;
