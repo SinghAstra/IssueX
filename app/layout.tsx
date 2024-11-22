@@ -42,7 +42,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/assets/images/favicon.ico",
   },
-  // manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
 export default function RootLayout({
