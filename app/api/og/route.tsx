@@ -19,6 +19,7 @@ export async function GET() {
             padding: "48px",
           }}
         >
+          {/* Main Content Container */}
           <div
             style={{
               display: "flex",
@@ -27,7 +28,14 @@ export async function GET() {
               justifyContent: "space-between",
             }}
           >
-            <div style={{ color: "#ffffff" }}>
+            {/* Header Section */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                color: "#ffffff",
+              }}
+            >
               <h1
                 style={{
                   fontSize: "72px",
@@ -53,6 +61,7 @@ export async function GET() {
               </p>
             </div>
 
+            {/* Features Section */}
             <div
               style={{
                 display: "flex",
@@ -65,6 +74,7 @@ export async function GET() {
                   <div
                     key={feature}
                     style={{
+                      display: "flex",
                       padding: "12px 24px",
                       borderRadius: "8px",
                       backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -78,6 +88,7 @@ export async function GET() {
               )}
             </div>
 
+            {/* Footer Section */}
             <div
               style={{
                 display: "flex",
@@ -106,6 +117,7 @@ export async function GET() {
                 <a
                   href={siteConfig.links.github}
                   style={{
+                    display: "flex",
                     fontSize: "24px",
                     textDecoration: "none",
                     color: "#ffffff",
@@ -117,6 +129,7 @@ export async function GET() {
 
               <div
                 style={{
+                  display: "flex",
                   padding: "8px 16px",
                   borderRadius: "6px",
                   backgroundColor: "rgba(255, 255, 255, 0.1)",
