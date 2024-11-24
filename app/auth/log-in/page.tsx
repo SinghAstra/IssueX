@@ -12,7 +12,7 @@ const LogInPage = () => {
         callbackUrl: "/dashboard",
       });
     } catch (error) {
-      console.error("GitHub authentication error:", error);
+      console.log("GitHub authentication error:", error);
     }
   };
   return (

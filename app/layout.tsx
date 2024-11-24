@@ -1,3 +1,4 @@
+import Providers from "@/components/providers/provider";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
@@ -95,9 +96,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased min-h-screen bg-background">
-        <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-        {children}
-        <Toaster />
+        <Providers>
+          <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
