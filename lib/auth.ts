@@ -5,11 +5,23 @@ import GithubProvider from "next-auth/providers/github";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
+      authorization: {
+        params: {
+          scope: [
+            "read:user",
+            "user:email",
+            "repo",
+            "write:discussion",
+            "admin:repo_hook",
+            "admin:org_hook",
+          ].join(" "),
+        },
+      },
       profile(profile) {
         console.log("🔵 GitHub Profile Data:", profile);
         return {
@@ -18,6 +30,8 @@ export const authOptions = {
           email: profile.email,
           image: profile.avatar_url,
           githubId: profile.id.toString(),
+          username: profile.login,
+          accessToken: profile.accessToken,
         };
       },
     }),
@@ -35,9 +49,8 @@ export const authOptions = {
       console.log("- Original Session:", { ...session });
       console.log("- User:", user);
       console.log("- Token:", token);
-      if (session?.user && user?.id) {
-        session.user.id = user.id;
-        console.log("- Updated Session:", { ...session });
+      if (session?.user) {
+        session.user.id = token.id as string;
       }
       return session;
     },
