@@ -6,7 +6,7 @@ export const navigation = [
   },
   {
     name: "Repositories",
-    href: "/dashboard/repositories",
+    href: "/repositories",
     icon: "gitBranch" as const,
   },
   {
