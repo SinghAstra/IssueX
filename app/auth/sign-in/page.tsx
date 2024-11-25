@@ -2,6 +2,7 @@
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 const SignInPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,9 +27,9 @@ const SignInPage = () => {
         disabled={isLoading}
       >
         {isLoading ? (
-          <span className="loading loading-spinner mr-2" />
+          <Icons.loader className="animate-spin mr-2" />
         ) : (
-          <Icons.github className="mr-2 h-4 w-4" />
+          <Icons.gitLogo className="mr-2 h-4 w-4" />
         )}
         Continue with Github
       </Button>

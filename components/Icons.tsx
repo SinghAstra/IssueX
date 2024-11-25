@@ -1,9 +1,21 @@
-import { AlertCircle, ArrowLeft, Swords } from "lucide-react";
+import {
+  ActivityIcon,
+  AlertCircle,
+  ArrowLeft,
+  BugIcon,
+  GitBranchIcon,
+  LoaderCircle,
+  Swords,
+} from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
 export const Icons = {
   alertCircle: AlertCircle,
   logo: Swords,
-  github: FaGithub,
+  gitLogo: FaGithub,
+  gitBranchIcon: GitBranchIcon,
+  gitBugIcon: BugIcon,
   arrowLeft: ArrowLeft,
+  loader: LoaderCircle,
+  activityLogIcon: ActivityIcon,
 };

@@ -67,7 +67,7 @@ export default function AuthError() {
       <div className="mt-8 space-y-4">
         <Button variant="outline" className="w-full" asChild>
           <Link href="/auth/sign-in">
-            <Icons.github className="mr-2 h-4 w-4" />
+            <Icons.gitLogo className="mr-2 h-4 w-4" />
             Try Again with GitHub
           </Link>
         </Button>
