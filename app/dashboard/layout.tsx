@@ -17,7 +17,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen">
       <Sidebar navigation={navigation} />
       <div className="lg:pl-64">
-        <Header />
+        <Header showLogo={false} showSearchBar={false} />
         <main className="py-4">{children}</main>
       </div>
     </div>

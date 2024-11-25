@@ -1,12 +1,9 @@
 "use client";
 
-import { Icons } from "@/components/Icons";
-import { FilterBar } from "@/components/repositories/Filterbar";
+import { FilterBar } from "@/components/repositories/FilterBar";
 import { RepositoryCard } from "@/components/repositories/RepositoryCard";
-import { SearchBar } from "@/components/repositories/Searchbar";
 import React, { useState } from "react";
 
-// Mock data
 const repositories = [
   {
     name: "issue-tracker",
@@ -40,33 +37,20 @@ const repositories = [
   },
 ];
 
-function App() {
+function RepositoryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center gap-3 mb-8">
-          <Icons.gitLogo className="h-8 w-8 text-gray-900 dark:text-white" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            GitHub Repositories
-          </h1>
-        </div>
-
-        <div className="space-y-6">
-          <SearchBar onSearch={setSearchQuery} />
-          <FilterBar onFilter={setActiveFilter} />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {repositories.map((repo) => (
-              <RepositoryCard key={repo.name} repo={repo} />
-            ))}
-          </div>
-        </div>
+    <div className="px-4 sm:px-6 lg:px-8 py-2 space-y-6">
+      <FilterBar onFilter={setActiveFilter} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {repositories.map((repo) => (
+          <RepositoryCard key={repo.name} repo={repo} />
+        ))}
       </div>
     </div>
   );
 }
 
-export default App;
+export default RepositoryPage;

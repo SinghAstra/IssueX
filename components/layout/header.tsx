@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -11,31 +10,44 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { PlusIcon, SearchIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Icons } from "../Icons";
 
-export function Header() {
+interface HeaderProps {
+  showLogo: boolean;
+  showSearchBar: boolean;
+}
+
+export function Header({ showLogo, showSearchBar }: HeaderProps) {
   const { data: session } = useSession();
 
-  console.log("session --header is ", session);
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#2a2f45] bg-[#1a1f37]/95 backdrop-blur supports-[backdrop-filter]:bg-[#1a1f37]/75">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
       <div className="container flex h-16 items-center px-4">
-        {/* Search */}
-        <div className="flex-1 md:flex md:justify-center px-4">
-          <div className="w-full max-w-2xl relative">
-            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search repositories and issues..."
-              className="w-full bg-[#1e2442] border-[#2a2f45] pl-10"
-            />
+        {showLogo && (
+          <Link className="flex h-16 items-center gap-2" href="/">
+            <Icons.logo className="h-8 w-8 text-[#2d8cf0]" />
+            <span className="font-semibold text-lg uppercase tracking-wider">
+              {siteConfig.name}
+            </span>
+          </Link>
+        )}
+        {showSearchBar && (
+          <div className="flex-1 md:flex md:justify-center px-4 ">
+            <div className="w-full max-w-2xl relative">
+              <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search repositories and issues..."
+                className="w-full bg-[hsl(var(--input))] pl-10 border border-border"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
@@ -44,7 +56,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground hover:text-foreground bg-[#1e2442] hover:bg-[#2a2f45]"
+              className="text-muted-foreground hover:text-foreground bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))]"
               asChild
             >
               <Link href="/repositories">
@@ -53,7 +65,6 @@ export function Header() {
             </Button>
           </div>
 
-          {/* User Menu */}
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -73,7 +84,7 @@ export function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-56 bg-[#1e2442] border-[#2a2f45]"
+                className="w-56 bg-card border-border"
                 align="end"
                 forceMount
               >
@@ -85,16 +96,16 @@ export function Header() {
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-[#2a2f45]" />
+                <DropdownMenuSeparator className="bg-border" />
                 <DropdownMenuItem asChild>
                   <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/settings">Settings</Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-[#2a2f45]" />
+                <DropdownMenuSeparator className="bg-border" />
                 <DropdownMenuItem
-                  className="text-[#ff4d4d] cursor-pointer"
+                  className="text-red-400 cursor-pointer"
                   onSelect={() => signOut()}
                 >
                   Log out

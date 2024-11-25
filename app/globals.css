@@ -9,30 +9,50 @@
 
 @layer base {
   :root {
-    --background: 255, 10%, 9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* Core background and surface colors */
+    --background: 222 47% 5%;
+    --foreground: 213 31% 91%;
+
+    /* Elevated surfaces */
+    --card: 222 47% 7%;
+    --card-foreground: 213 31% 91%;
+    --popover: 222 47% 7%;
+    --popover-foreground: 213 31% 91%;
+
+    /* Primary accent - Vivid blue */
+    --primary: 214 95% 65%;
+    --primary-foreground: 222 47% 5%;
+
+    /* Secondary - Subtle blue-gray */
+    --secondary: 222 47% 11%;
+    --secondary-foreground: 213 31% 91%;
+
+    /* Muted elements */
+    --muted: 222 47% 11%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent - Slightly brighter than secondary */
+    --accent: 217 19% 27%;
+    --accent-foreground: 213 31% 91%;
+
+    /* Destructive actions */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 240, 2%, 19%;
-    --ring: 224.3 76.3% 48%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+
+    /* Borders and inputs */
+    --border: 222 47% 11%;
+    --input: 222 47% 7%;
+    --ring: 214 95% 65%;
+
+    /* Repository-specific colors */
+    --repo-connected: 142 72% 46%;
+    --repo-not-connected: 214 95% 65%;
+    --repo-language-ts: 214 95% 65%;
+    --repo-language-go: 176 65% 42%;
+    --repo-language-rust: 14 92% 53%;
+    --repo-hover: 222 47% 9%;
+
+    /* Radius */
     --radius: 0.875rem;
   }
 }
@@ -63,11 +83,11 @@ body {
 
 ::-webkit-scrollbar {
   width: 6px;
-  scrollbar-color: #262626;
+  scrollbar-color: hsl(222 47% 11%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #262626;
+  background-color: hsl(222 47% 11%);
   border-radius: 3px;
 }
 
@@ -80,12 +100,12 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px hsl(var(--background)) inset !important;
-  -webkit-text-fill-color: white !important;
-  caret-color: white !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground)) !important;
   box-shadow: 0 0 0 30px hsl(var(--background)) inset !important;
 }
 
 input:-webkit-autofill:not(:focus) {
   -webkit-box-shadow: 0 0 0 1000px hsl(var(--background)) inset !important;
-  -webkit-text-fill-color: white !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
 }
