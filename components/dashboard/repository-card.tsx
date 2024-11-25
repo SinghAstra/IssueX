@@ -52,13 +52,13 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-[#2a2f45]">
           <div className="flex items-center gap-2">
-            <Icons.gitBranchIcon className="h-4 w-4 text-muted-foreground" />
+            <Icons.gitBranch className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
               ID: {repository.githubId}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Icons.activityLogIcon className="h-4 w-4 text-muted-foreground" />
+            <Icons.activityLog className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
               {repository.webhookId ? "Webhook Active" : "No Webhook"}
             </span>

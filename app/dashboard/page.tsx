@@ -22,7 +22,7 @@ export default function DashboardPage() {
         <StatsCard
           title="Active Repositories"
           value={mockStats.activeRepositories}
-          icon={<Icons.gitBranchIcon className="h-5 w-5" />}
+          icon={<Icons.gitBranch className="h-5 w-5" />}
           trend={{ value: 8, isPositive: true }}
           description="Repositories with recent activity"
           variant="purple"
@@ -30,7 +30,7 @@ export default function DashboardPage() {
         <StatsCard
           title="Open Issues"
           value={mockStats.openIssues}
-          icon={<Icons.gitBugIcon className="h-5 w-5" />}
+          icon={<Icons.gitBug className="h-5 w-5" />}
           trend={{ value: 5, isPositive: false }}
           description="Issues requiring attention"
           variant="orange"
@@ -41,7 +41,7 @@ export default function DashboardPage() {
             (mockStats.aiAnalyzedIssues / mockStats.totalIssues) *
             100
           ).toFixed(0)}%`}
-          icon={<Icons.activityLogIcon className="h-5 w-5" />}
+          icon={<Icons.activityLog className="h-5 w-5" />}
           description="Issues processed by AI"
           variant="green"
         />

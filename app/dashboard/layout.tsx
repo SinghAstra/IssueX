@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
+import { navigation } from "@/config/navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
+      <Sidebar navigation={navigation} />
       <div className="lg:pl-64">
         <Header />
         <main className="py-4">{children}</main>
