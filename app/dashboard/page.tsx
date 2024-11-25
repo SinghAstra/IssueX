@@ -1,9 +1,10 @@
 "use client";
 
+import { RecentIssues } from "@/components/dashboard/recent-issues";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Icons } from "@/components/Icons";
-import { mockRepositories, mockStats } from "@/data/mock";
-import { RepositoryCard } from "./repository-card";
+import { mockIssues, mockRepositories, mockStats } from "@/data/mock";
+import { RepositoryCard } from "../../components/dashboard/repository-card";
 
 export default function DashboardPage() {
   return (
@@ -57,7 +58,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Issues */}
-      {/* <RecentIssues issues={mockIssues} /> */}
+      <RecentIssues issues={mockIssues} />
     </div>
   );
 }
