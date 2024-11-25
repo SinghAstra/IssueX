@@ -3,6 +3,7 @@ import {
   AlertCircle,
   ArrowLeft,
   BugIcon,
+  ClockIcon,
   GitBranchIcon,
   LoaderCircle,
   Swords,
@@ -11,6 +12,7 @@ import { FaGithub } from "react-icons/fa";
 
 export const Icons = {
   alertCircle: AlertCircle,
+  clock: ClockIcon,
   logo: Swords,
   gitLogo: FaGithub,
   gitBranchIcon: GitBranchIcon,

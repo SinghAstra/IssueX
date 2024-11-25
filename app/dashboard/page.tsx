@@ -2,7 +2,8 @@
 
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Icons } from "@/components/Icons";
-import { mockStats } from "@/data/mock";
+import { mockRepositories, mockStats } from "@/data/mock";
+import { RepositoryCard } from "./repository-card";
 
 export default function DashboardPage() {
   return (
@@ -46,14 +47,14 @@ export default function DashboardPage() {
       </div>
 
       {/* Repositories Grid */}
-      {/* <div>
+      <div>
         <h2 className="text-xl font-semibold mb-4">Connected Repositories</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {mockRepositories.map((repo) => (
             <RepositoryCard key={repo.id} repository={repo} />
           ))}
         </div>
-      </div> */}
+      </div>
 
       {/* Recent Issues */}
       {/* <RecentIssues issues={mockIssues} /> */}
