@@ -38,8 +38,10 @@ const repositories = [
 ];
 
 function RepositoryPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
+
+  console.log("activeFilter is ", activeFilter);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-2 space-y-6">
