@@ -88,9 +88,7 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                 >
                   {issue.aiAnalyzed ? "AI Analyzed" : "Pending Analysis"}
                 </Badge>
-                <span className="text-sm text-muted-foreground">
-                  {new Date(issue.createdAt).toLocaleDateString()}
-                </span>
+                <span className="text-sm text-muted-foreground"></span>
               </div>
             </div>
           ))}
