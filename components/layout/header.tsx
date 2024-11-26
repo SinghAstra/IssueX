@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { PlusIcon, SearchIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { ChangeEvent } from "react";
 import { Icons } from "../Icons";
 import { UserAvatarSkeleton } from "./user-avatar-skeleton";
 
@@ -22,12 +23,18 @@ interface HeaderProps {
   showLogo: boolean;
   showSearchBar: boolean;
   showCreateNewButton: boolean;
+  searchPlaceholder?: string;
+  searchValue?: string;
+  onSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function Header({
   showLogo,
   showSearchBar,
   showCreateNewButton,
+  searchPlaceholder,
+  searchValue,
+  onSearchChange,
 }: HeaderProps) {
   const { data: session } = useSession();
 
@@ -48,7 +55,9 @@ export function Header({
               <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search repositories and issues..."
+                placeholder={searchPlaceholder}
+                value={searchValue}
+                onChange={onSearchChange}
                 className="w-full bg-[hsl(var(--input))] pl-10 border border-border"
               />
             </div>

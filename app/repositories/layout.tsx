@@ -1,29 +1,22 @@
-import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { navigation } from "@/config/navigation";
 import { Metadata } from "next";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Connect Repository",
   description: "Manage your GitHub issues efficiently",
 };
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface RepositoryLayoutProps {
+  children: ReactNode;
+}
+
+export default function RepositoryLayout({ children }: RepositoryLayoutProps) {
   return (
     <div className="flex min-h-screen w-full">
       <Sidebar navigation={navigation} />
-      <div className="lg:pl-64 flex-1">
-        <Header
-          showLogo={false}
-          showSearchBar={true}
-          showCreateNewButton={false}
-        />
-        <main className="py-4">{children}</main>
-      </div>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }

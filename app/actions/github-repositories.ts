@@ -28,9 +28,9 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
 
     const { data: repositories } = await octokit.request("GET /user/repos", {
       per_page: 100,
+      sort: "updated",
+      direction: "desc",
     });
-
-    console.log("repositories[0] is ", repositories[0]);
 
     const connectedRepos = await prisma.repository.findMany({
       where: { userId: session.user.id },
