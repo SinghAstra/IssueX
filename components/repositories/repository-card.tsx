@@ -31,6 +31,7 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
       <div className="mt-auto p-4 border-t flex space-x-2">
         <Link
           href={repo.url}
+          target="_blank"
           className={cn(buttonVariants({ variant: "outline" }), "flex-grow")}
         >
           <Icons.gitLogo className="mr-2" />

@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
 const filters = ["All", "Connected", "Not Connected"];
 
 export function FilterBar({
+  activeFilter,
   onFilter,
 }: {
+  activeFilter: string;
   onFilter: (filter: string) => void;
 }) {
-  const [activeFilter, setActiveFilter] = useState("All");
-
   const handleFilterClick = (filter: string) => {
-    setActiveFilter(filter);
     onFilter(filter);
   };
 
