@@ -21,14 +21,14 @@ export function Sidebar({ navigation }: SidebarProps) {
 
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-      <div className="flex grow flex-col gap-y-3 bg-[#1a1f37] border-r border-[#2a2f45] px-2">
+      <div className="flex grow flex-col gap-y-3 bg-background border-r border-border px-2">
         {/* Logo */}
-        <div className="flex h-16 items-center gap-2">
-          <Icons.logo className="h-8 w-8 text-[#2d8cf0]" />
-          <span className="font-semibold text-lg uppercase tracking-wider">
+        <Link className="flex h-16 items-center gap-2" href="/dashboard">
+          <Icons.logo className="h-8 w-8 text-primary" />
+          <span className="font-semibold text-lg uppercase tracking-wider text-foreground">
             {siteConfig.name}
           </span>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className="flex flex-1 flex-col">
@@ -42,8 +42,8 @@ export function Sidebar({ navigation }: SidebarProps) {
                     className={cn(
                       "group flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                       pathname === item.href
-                        ? "bg-[#2d8cf0]/10 text-[#2d8cf0]"
-                        : "text-muted-foreground hover:bg-[#1e2442] hover:text-foreground"
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-card hover:text-foreground"
                     )}
                   >
                     <IconComponent className="h-5 w-5 shrink-0" />

@@ -13,18 +13,18 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
     <Card
       className={cn(
         "relative overflow-hidden transition-all duration-300",
-        "bg-[#1a1f37] hover:bg-[#1a1f37]/80",
-        "border-[#2a2f45] shadow-lg",
+        "bg-card hover:bg-card/80",
+        "border-border shadow-lg",
         "before:absolute before:inset-0 before:opacity-0",
         "before:transition-opacity hover:before:opacity-100",
-        "before:bg-gradient-to-br before:from-[#2d8cf0]/5 before:to-transparent"
+        "before:bg-gradient-to-br before:from-primary/5 before:to-transparent"
       )}
     >
       <CardContent className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="bg-[#2d8cf0]/10 text-[#2d8cf0] p-2 rounded-xl">
+            <div className="bg-primary/10 text-primary p-2 rounded-xl">
               <Icons.gitLogo className="h-5 w-5" />
             </div>
             <div>
@@ -41,8 +41,8 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
             className={cn(
               "px-2.5 py-0.5 text-xs font-semibold",
               repository.isActive
-                ? "bg-[#33b469]/10 text-[#33b469] border-[#33b469]/20"
-                : "bg-muted/10 text-muted-foreground border-muted/20"
+                ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                : "bg-muted text-muted-foreground border-muted"
             )}
           >
             {repository.isActive ? "Active" : "Inactive"}
@@ -50,7 +50,7 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-[#2a2f45]">
+        <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border">
           <div className="flex items-center gap-2">
             <Icons.gitBranch className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
@@ -66,7 +66,7 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-[#2a2f45]">
+        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
           <Icons.clock className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Connected</span>
         </div>

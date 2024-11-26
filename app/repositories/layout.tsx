@@ -1,4 +1,6 @@
 import { Header } from "@/components/layout/header";
+import { Sidebar } from "@/components/layout/sidebar";
+import { navigation } from "@/config/navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,9 +14,16 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header showLogo={true} showSearchBar={true} />
-      <main className="py-4">{children}</main>
+    <div className="flex min-h-screen">
+      <Sidebar navigation={navigation} />
+      <div className="lg:pl-64">
+        <Header
+          showLogo={false}
+          showSearchBar={true}
+          showCreateNewButton={false}
+        />
+        <main className="py-4">{children}</main>
+      </div>
     </div>
   );
 }

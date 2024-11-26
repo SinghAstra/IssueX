@@ -14,27 +14,27 @@ interface RecentIssuesProps {
 
 export function RecentIssues({ issues }: RecentIssuesProps) {
   return (
-    <Card className="bg-[#1a1f37] border-[#2a2f45]">
-      <CardHeader className="border-b border-[#2a2f45]">
+    <Card className="bg-card border-border">
+      <CardHeader className="border-b border-border">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-semibold flex items-center gap-2">
-            <GitPullRequestIcon className="h-5 w-5 text-[#2d8cf0]" />
+            <GitPullRequestIcon className="h-5 w-5 text-primary" />
             Recent Issues
           </CardTitle>
           <Badge
             variant="outline"
-            className="bg-[#2d8cf0]/10 text-[#2d8cf0] border-[#2d8cf0]/20"
+            className="bg-primary/10 text-primary border-primary/20"
           >
             {issues.length} Total
           </Badge>
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="divide-y divide-[#2a2f45]">
+        <div className="divide-y divide-border">
           {issues.map((issue) => (
             <div
               key={issue.id}
-              className="flex items-center justify-between p-4 hover:bg-[#1e2442] transition-colors"
+              className="flex items-center justify-between p-4 hover:bg-accent/50 transition-colors"
             >
               <div className="flex items-center gap-4">
                 {/* Status Icon */}
@@ -42,14 +42,14 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                   className={cn(
                     "p-2 rounded-full",
                     issue.status === "OPEN"
-                      ? "bg-[#ff4d4d]/10"
-                      : "bg-[#33b469]/10"
+                      ? "bg-destructive/10"
+                      : "bg-emerald-500/10"
                   )}
                 >
                   {issue.status === "OPEN" ? (
-                    <AlertCircleIcon className="h-4 w-4 text-[#ff4d4d]" />
+                    <AlertCircleIcon className="h-4 w-4 text-destructive" />
                   ) : (
-                    <CheckCircleIcon className="h-4 w-4 text-[#33b469]" />
+                    <CheckCircleIcon className="h-4 w-4 text-emerald-500" />
                   )}
                 </div>
 
@@ -62,8 +62,8 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                       className={cn(
                         "text-xs",
                         issue.status === "OPEN"
-                          ? "bg-[#ff4d4d]/10 text-[#ff4d4d] border-[#ff4d4d]/20"
-                          : "bg-[#33b469]/10 text-[#33b469] border-[#33b469]/20"
+                          ? "bg-destructive/10 text-destructive border-destructive/20"
+                          : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                       )}
                     >
                       {issue.status}
@@ -82,7 +82,7 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                   className={cn(
                     "text-xs",
                     issue.aiAnalyzed
-                      ? "bg-[#7928ca]/10 text-[#7928ca] border-[#7928ca]/20"
+                      ? "bg-primary/10 text-primary border-primary/20"
                       : "bg-muted/10 text-muted-foreground border-muted/20"
                   )}
                 >

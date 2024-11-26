@@ -24,32 +24,32 @@ export function StatsCard({
   variant = "blue",
 }: StatsCardProps) {
   const variantStyles = {
-    blue: "bg-[#1a1f37] hover:bg-[#1a1f37]/80 before:from-[#2d8cf0]/10 before:to-transparent",
+    blue: "bg-card hover:bg-card/80 before:from-[hsl(var(--stats-blue))]/10 before:to-transparent",
     purple:
-      "bg-[#1a1732] hover:bg-[#1a1732]/80 before:from-[#7928ca]/10 before:to-transparent",
+      "bg-card hover:bg-card/80 before:from-[hsl(var(--stats-purple))]/10 before:to-transparent",
     orange:
-      "bg-[#1a1f37] hover:bg-[#1a1f37]/80 before:from-[#ff4d4d]/10 before:to-transparent",
+      "bg-card hover:bg-card/80 before:from-[hsl(var(--stats-orange))]/10 before:to-transparent",
     green:
-      "bg-[#1a2637] hover:bg-[#1a2637]/80 before:from-[#33b469]/10 before:to-transparent",
+      "bg-card hover:bg-card/80 before:from-[hsl(var(--stats-green))]/10 before:to-transparent",
   };
 
   const iconStyles = {
-    blue: "bg-[#2d8cf0]/10 text-[#2d8cf0]",
-    purple: "bg-[#7928ca]/10 text-[#7928ca]",
-    orange: "bg-[#ff4d4d]/10 text-[#ff4d4d]",
-    green: "bg-[#33b469]/10 text-[#33b469]",
+    blue: "bg-[hsl(var(--stats-blue))]/10 text-[hsl(var(--stats-blue))]",
+    purple: "bg-[hsl(var(--stats-purple))]/10 text-[hsl(var(--stats-purple))]",
+    orange: "bg-[hsl(var(--stats-orange))]/10 text-[hsl(var(--stats-orange))]",
+    green: "bg-[hsl(var(--stats-green))]/10 text-[hsl(var(--stats-green))]",
   };
 
   const trendColors = {
-    positive: "text-[#33b469]",
-    negative: "text-[#ff4d4d]",
+    positive: "text-[hsl(var(--stats-green))]",
+    negative: "text-[hsl(var(--stats-orange))]",
   };
 
   return (
     <Card
       className={cn(
         "relative overflow-hidden transition-all duration-300",
-        "border-[#1a1f37] shadow-lg",
+        "border-border shadow-lg",
         "before:absolute before:inset-0 before:opacity-0 before:transition-opacity hover:before:opacity-100",
         "before:bg-gradient-to-br",
         variantStyles[variant],
@@ -85,7 +85,7 @@ export function StatsCard({
           )}
         </div>
         {description && (
-          <p className="mt-4 text-sm text-muted-foreground border-t border-[#2a2f45]/50 pt-4">
+          <p className="mt-4 text-sm text-muted-foreground border-t border-border/50 pt-4">
             {description}
           </p>
         )}

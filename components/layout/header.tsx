@@ -20,14 +20,19 @@ import { Icons } from "../Icons";
 interface HeaderProps {
   showLogo: boolean;
   showSearchBar: boolean;
+  showCreateNewButton: boolean;
 }
 
-export function Header({ showLogo, showSearchBar }: HeaderProps) {
+export function Header({
+  showLogo,
+  showSearchBar,
+  showCreateNewButton,
+}: HeaderProps) {
   const { data: session } = useSession();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-      <div className="container flex h-16 items-center px-4">
+      <div className="container flex h-16 items-center justify-between px-4">
         {showLogo && (
           <Link className="flex h-16 items-center gap-2" href="/">
             <Icons.logo className="h-8 w-8 text-[#2d8cf0]" />
@@ -50,19 +55,21 @@ export function Header({ showLogo, showSearchBar }: HeaderProps) {
         )}
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ml-auto">
           {/* Quick Actions */}
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))]"
-              asChild
-            >
-              <Link href="/repositories">
-                <PlusIcon className="h-5 w-5" />
-              </Link>
-            </Button>
+            {showCreateNewButton && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))]"
+                asChild
+              >
+                <Link href="/repositories">
+                  <PlusIcon className="h-5 w-5" />
+                </Link>
+              </Button>
+            )}
           </div>
 
           {session ? (
@@ -70,7 +77,7 @@ export function Header({ showLogo, showSearchBar }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
+                  className="relative h-8 w-8 rounded-full border border-primary"
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage

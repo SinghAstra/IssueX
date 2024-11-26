@@ -44,16 +44,14 @@
     --input: 222 47% 7%;
     --ring: 214 95% 65%;
 
-    /* Repository-specific colors */
-    --repo-connected: 142 72% 46%;
-    --repo-not-connected: 214 95% 65%;
-    --repo-language-ts: 214 95% 65%;
-    --repo-language-go: 176 65% 42%;
-    --repo-language-rust: 14 92% 53%;
-    --repo-hover: 222 47% 9%;
-
     /* Radius */
     --radius: 0.875rem;
+
+    /* Stats Card Variants*/
+    --stats-blue: 214 95% 65%;
+    --stats-purple: 277 84% 47%;
+    --stats-orange: 0 84% 60%;
+    --stats-green: 142 61% 45%;
   }
 }
 
