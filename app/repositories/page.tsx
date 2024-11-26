@@ -1,7 +1,9 @@
 "use client";
 
 import { FilterBar } from "@/components/repositories/filter-bar";
+import { FilterBarSkeleton } from "@/components/repositories/filter-bar-skeleton";
 import { RepositoryCard } from "@/components/repositories/repository-card";
+import { RepositoryCardSkeleton } from "@/components/repositories/repository-card-skeleton";
 import { Repository } from "@/types/repository";
 import React, { useEffect, useState } from "react";
 import { fetchGithubRepositories } from "../actions/github-repositories";
@@ -52,7 +54,16 @@ function RepositoryPage() {
   };
 
   if (loading) {
-    return <div>Loading repositories...</div>;
+    return (
+      <div className="px-4 sm:px-6 lg:px-8 py-2 space-y-6">
+        <FilterBarSkeleton />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <RepositoryCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
