@@ -16,6 +16,7 @@ import { PlusIcon, SearchIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Icons } from "../Icons";
+import { UserAvatarSkeleton } from "./user-avatar-skeleton";
 
 interface HeaderProps {
   showLogo: boolean;
@@ -32,7 +33,7 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-      <div className="container flex h-16 items-center justify-between px-4">
+      <div className="container flex p-4 items-center justify-between">
         {showLogo && (
           <Link className="flex h-16 items-center gap-2" href="/">
             <Icons.logo className="h-8 w-8 text-[#2d8cf0]" />
@@ -72,14 +73,16 @@ export function Header({
             )}
           </div>
 
-          {session ? (
+          {session === undefined ? (
+            <UserAvatarSkeleton />
+          ) : session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-8 w-8 rounded-full border border-primary"
+                  className="relative h-8 w-8 rounded-full"
                 >
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-8 w-8 border-primary border">
                     <AvatarImage
                       src={session.user?.image || "/avatars/default.png"}
                       alt={session.user?.name || "User"}

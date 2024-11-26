@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
+import GithubProvider, { GithubProfile } from "next-auth/providers/github";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -29,9 +29,7 @@ export const authOptions = {
           name: profile.name || profile.login,
           email: profile.email,
           image: profile.avatar_url,
-          githubId: profile.id.toString(),
-          username: profile.login,
-          accessToken: profile.accessToken,
+          githubUsername: profile.login,
         };
       },
     }),
@@ -49,41 +47,38 @@ export const authOptions = {
       console.log("- Original Session:", { ...session });
       console.log("- User:", user);
       console.log("- Token:", token);
-      if (session?.user) {
+
+      if (session.user) {
         session.user.id = token.id as string;
+        session.user.githubUsername = token.githubUsername;
       }
+
+      session.accessToken = token.accessToken;
+
       return session;
     },
-    jwt: async ({ token, user, account, trigger }) => {
+    jwt: async ({ token, user, account, profile }) => {
       console.log("🎫 JWT Callback:");
       console.log("- Original Token:", { ...token });
       console.log("- User:", user);
       console.log("- Account:", account);
-      console.log("- Trigger:", trigger);
+      console.log("- Profile:", profile);
+
+      if (profile && account?.provider === "github") {
+        const githubProfile = profile as GithubProfile;
+        console.log("githubProfile is ", githubProfile);
+        token.githubUsername = githubProfile.login;
+      }
+
       if (user) {
         token.id = user.id;
       }
+
       if (account) {
         token.accessToken = account.access_token;
       }
+
       return token;
-    },
-  },
-  events: {
-    async signIn(message) {
-      console.log("✨ Sign In Event:", message);
-    },
-    async signOut(message) {
-      console.log("👋 Sign Out Event:", message);
-    },
-    async createUser(message) {
-      console.log("➕ Create User Event:", message);
-    },
-    async linkAccount(message) {
-      console.log("🔗 Link Account Event:", message);
-    },
-    async session(message) {
-      console.log("📍 Session Event:", message);
     },
   },
   pages: {

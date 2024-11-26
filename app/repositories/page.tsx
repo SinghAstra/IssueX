@@ -1,45 +1,32 @@
 "use client";
 
-import { FilterBar } from "@/components/repositories/FilterBar";
-import { RepositoryCard } from "@/components/repositories/RepositoryCard";
-import React, { useState } from "react";
-
-const repositories = [
-  {
-    name: "issue-tracker",
-    description: "A modern issue tracking system built with React and Node.js",
-    organization: "acme-org",
-    language: "TypeScript",
-    stars: 128,
-    forks: 23,
-    isConnected: true,
-    lastUpdated: "2024-03-15",
-  },
-  {
-    name: "api-gateway",
-    description: "High-performance API gateway with built-in authentication",
-    organization: "acme-org",
-    language: "Go",
-    stars: 342,
-    forks: 56,
-    isConnected: false,
-    lastUpdated: "2024-03-14",
-  },
-  {
-    name: "design-system",
-    description: "Component library and design system for web applications",
-    organization: "personal",
-    language: "TypeScript",
-    stars: 89,
-    forks: 12,
-    isConnected: true,
-    lastUpdated: "2024-03-13",
-  },
-];
+import { FilterBar } from "@/components/repositories/filter-bar";
+import { RepositoryCard } from "@/components/repositories/repository-card";
+import { Repository } from "@/types/repository";
+import React, { useEffect, useState } from "react";
+import { fetchGithubRepositories } from "../actions/github-repositories";
 
 function RepositoryPage() {
   // const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchRepositories() {
+      try {
+        const fetchedRepos = await fetchGithubRepositories();
+        console.log("fetchedRepos is ", fetchedRepos);
+        setRepositories(fetchedRepos);
+      } catch (error) {
+        console.log("Failed to fetch repositories", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRepositories();
+  }, []);
 
   console.log("activeFilter is ", activeFilter);
 

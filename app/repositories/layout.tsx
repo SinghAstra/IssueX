@@ -14,9 +14,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full">
       <Sidebar navigation={navigation} />
-      <div className="lg:pl-64">
+      <div className="lg:pl-64 flex-1">
         <Header
           showLogo={false}
           showSearchBar={true}
