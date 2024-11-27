@@ -1,12 +1,62 @@
+import { useRepositoryConnection } from "@/app/actions/repository-client";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Repository } from "@/types/repository";
-import { GitFork, Star } from "lucide-react";
+import { Check, GitFork, Link2, Settings, Star } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Icons } from "../Icons";
 import { Button, buttonVariants } from "../ui/button";
 
 export function RepositoryCard({ repo }: { repo: Repository }) {
+  const { connectRepository, loading, error } = useRepositoryConnection();
+  const { toast } = useToast();
+
+  const handleConnect = () => {
+    connectRepository(repo.fullName);
+  };
+
+  const truncateDescription = (description: string | null, maxLength = 50) => {
+    if (!description) return;
+
+    return description.length > maxLength
+      ? `${description.slice(0, maxLength)}...`
+      : description;
+  };
+
+  const getButtonProps = () => {
+    switch (repo.connectionStatus) {
+      case "CONNECTED":
+        return {
+          variant: "green" as const,
+          text: "Connected",
+          icon: <Check className="mr-2 h-4 w-4" />,
+        };
+      case "PENDING":
+        return {
+          variant: "default" as const,
+          text: "Continue Setup",
+          icon: <Settings className="mr-2 h-4 w-4" />,
+        };
+      default:
+        return {
+          variant: "default" as const,
+          text: "Connect",
+          icon: <Link2 className="mr-2 h-4 w-4" />,
+        };
+    }
+  };
+  const { variant, text, icon } = getButtonProps();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: error,
+        description: "Please try again...",
+      });
+    }
+  }, [error, toast]);
+
   return (
     <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-card min-h-[16rem]">
       <div className="font-bold text-lg flex mb-2 justify-between p-4">
@@ -24,10 +74,21 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
         </div>
       </div>
 
-      {/* Limit the description */}
-      <div className="text-gray-600 p-4 text-sm">{repo.description}</div>
+      {/* <div className="flex space-x-1">
+          {repo.languages.map((lang) => (
+            <span 
+              key={lang} 
+              className="px-2 py-1 bg-gray-100 text-xs rounded-full"
+            >
+              {lang}
+            </span>
+          ))}
+        </div> */}
 
-      {/* Footer that stays at the bottom */}
+      <div className="text-gray-600 p-4 text-sm">
+        {truncateDescription(repo.description)}
+      </div>
+
       <div className="mt-auto p-4 border-t flex space-x-2">
         <Link
           href={repo.url}
@@ -39,17 +100,19 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
         </Link>
 
         <Button
-          variant={repo.isConnected ? "green" : "default"}
+          variant={variant}
           className="flex-grow"
+          disabled={loading}
+          onClick={handleConnect}
         >
-          {repo.isConnected ? "Connected" : "Connect"}
+          {loading ? (
+            <Icons.loaderCircle className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            icon
+          )}
+          {text}
         </Button>
       </div>
     </div>
   );
 }
-
-// <div
-//   className="bg-card rounded-[--radius] p-6 shadow-md hover:shadow-lg transition-all
-//   border border-border hover:bg-[hsl(var(--repo-hover))] group backdrop-blur-3xl relative"
-// >

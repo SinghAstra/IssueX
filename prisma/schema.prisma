@@ -14,14 +14,22 @@ model Repository {
   githubId    Int       
   userId      String   
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isActive    Boolean   @default(true)
+  connectionStatus ConnectionStatus   @default(PENDING)
+  description      String?
+  htmlUrl          String?
   webhookId   String?  
   issues      Issue[]   
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  templateId       String?
 
   @@unique([userId, fullName])
   @@index([fullName])
+}
+
+enum ConnectionStatus {
+  CONNECTED
+  PENDING
 }
 
 
@@ -43,6 +51,7 @@ enum IssueStatus {
   OPEN
   CLOSED
 }
+
 
 model User {
   id                  String    @id @default(cuid())

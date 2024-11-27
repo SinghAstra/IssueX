@@ -23,7 +23,6 @@ function RepositoryPage() {
     async function fetchRepositories() {
       try {
         const fetchedRepos = await fetchGithubRepositories();
-        console.log("fetchedRepos is ", fetchedRepos);
         setRepositories(fetchedRepos);
         setFilteredRepositories(fetchedRepos);
       } catch (error) {
@@ -43,11 +42,11 @@ function RepositoryPage() {
   useEffect(() => {
     let result = repositories;
 
-    if (activeFilter === "Connected") {
-      result = result.filter((repo) => repo.isConnected);
-    } else if (activeFilter === "Not Connected") {
-      result = result.filter((repo) => !repo.isConnected);
-    }
+    // if (activeFilter === "Connected") {
+    //   result = result.filter((repo) => repo.isConnected);
+    // } else if (activeFilter === "Not Connected") {
+    //   result = result.filter((repo) => !repo.isConnected);
+    // }
 
     if (searchQuery) {
       const lowercaseQuery = searchQuery.toLowerCase();
@@ -67,11 +66,8 @@ function RepositoryPage() {
       <div className="lg:pl-64 flex-1">
         <Header
           showLogo={false}
-          showSearchBar={true}
+          showSearchBar={false}
           showCreateNewButton={false}
-          searchPlaceholder="Search repositories..."
-          searchValue={searchQuery}
-          onSearchChange={(e) => setSearchQuery(e.target.value)}
         />
         <div className="px-4 sm:px-6 lg:px-8 py-2 space-y-6">
           <FilterBarSkeleton />
@@ -90,11 +86,8 @@ function RepositoryPage() {
       <div className="lg:pl-64 flex-1">
         <Header
           showLogo={false}
-          showSearchBar={true}
+          showSearchBar={false}
           showCreateNewButton={false}
-          searchPlaceholder="Search repositories..."
-          searchValue={searchQuery}
-          onSearchChange={(e) => setSearchQuery(e.target.value)}
         />
         <div className="text-center text-gray-500">No repositories found.</div>
       </div>
@@ -107,7 +100,7 @@ function RepositoryPage() {
         showLogo={false}
         showSearchBar={true}
         showCreateNewButton={false}
-        searchPlaceholder="Search repositories..."
+        searchPlaceholder="Search repositories and its description..."
         searchValue={searchQuery}
         onSearchChange={(e) => setSearchQuery(e.target.value)}
       />
