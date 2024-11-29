@@ -4,21 +4,29 @@ import { Repository } from "@/types/repository";
 import { Check, GitFork, Link2, Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useState } from "react";
 import { Icons } from "../Icons";
 import { Button, buttonVariants } from "../ui/button";
 
 export function RepositoryCard({ repo }: { repo: Repository }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleConnect = async () => {
-    switch (repo.connectionStatus) {
-      case "CONNECTED":
-        router.push(`/repositories/${repo.id}`);
-        break;
-      default:
-        const newRepo = await createRepositoryConnection(repo.fullName);
-        router.push(`/repositories/${newRepo.id}/template`);
+    setIsLoading(true);
+    try {
+      switch (repo.connectionStatus) {
+        case "CONNECTED":
+          router.push(`/repositories/${repo.id}`);
+          break;
+        default:
+          const newRepo = await createRepositoryConnection(repo.fullName);
+          router.push(`/repositories/${newRepo.id}`);
+      }
+    } catch (error) {
+      console.log("error --handleConnect is ", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,8 +98,17 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
           Github
         </Link>
 
-        <Button variant={variant} className="flex-grow" onClick={handleConnect}>
-          {icon}
+        <Button
+          variant={variant}
+          className="flex-grow"
+          onClick={handleConnect}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Icons.loaderCircle className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            icon
+          )}
           {text}
         </Button>
       </div>

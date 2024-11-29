@@ -150,7 +150,7 @@ export async function createRepositoryConnection(repoFullName: string) {
     data: {
       ...repositoryDetails,
       userId: session.user.id,
-      connectionStatus: "PENDING",
+      connectionStatus: "CONNECTED",
     },
   });
 }
