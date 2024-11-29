@@ -156,24 +156,12 @@ export async function createIssueTemplates(repoFullName: string) {
 
   const [owner, repo] = repoFullName.split("/");
 
-  console.log("Before the existingIssueRepo.");
-
-  const parentDirectoryContents = await octokit.repos.getContent({
-    owner,
-    repo,
-    path: ".github",
-  });
-
-  console.log("parentDirectoryContents is ", parentDirectoryContents);
-
   try {
     const existingContent = await octokit.repos.getContent({
       owner,
       repo,
       path: ".github",
     });
-
-    console.log("existingContent is ", existingContent);
 
     if (
       Array.isArray(existingContent.data) &&
@@ -199,7 +187,6 @@ export async function createIssueTemplates(repoFullName: string) {
   for (const templateFile of templateFiles) {
     const filePath = path.join(templateDir, templateFile);
     const fileContent = fs.readFileSync(filePath, "utf8");
-    console.log("templateFile is ", templateFile);
 
     try {
       await octokit.repos.createOrUpdateFileContents({
@@ -221,6 +208,52 @@ export async function createIssueTemplates(repoFullName: string) {
       console.log(`Error creating/updating ${templateFile}:`, error);
       throw error;
     }
+  }
+}
+
+async function createWebhook(repoFullName: string) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    const accessToken = session.accessToken;
+
+    if (!accessToken) {
+      throw new Error("No access token available");
+    }
+
+    const octokit = new Octokit({
+      auth: accessToken,
+    });
+
+    const WEBHOOK_URL = process.env.NEXT_AUTH_URL + "/api/webhook";
+    const WEBHOOK_SECRET = process.env.NEXT_AUTH_SECRET;
+
+    if (!WEBHOOK_URL || !WEBHOOK_SECRET) {
+      throw new Error("Webhook URL or secret not configured");
+    }
+
+    const [owner, repo] = repoFullName.split("/");
+
+    const { data: webhook } = await octokit.repos.createWebhook({
+      owner,
+      repo,
+      config: {
+        url: WEBHOOK_URL,
+        content_type: "json",
+        secret: WEBHOOK_SECRET,
+      },
+      events: ["issues", "issue_comment"],
+      active: true,
+    });
+
+    return webhook;
+  } catch (error) {
+    console.log("Error creating webhook:", error);
+    throw new Error("Failed to create repository webhook");
   }
 }
 
@@ -247,6 +280,10 @@ export async function createRepositoryConnection(repoFullName: string) {
     return existingRepository;
   }
 
+  const webhook = await createWebhook(repoFullName);
+
+  console.log("webhook is ", webhook);
+
   await createIssueTemplates(repoFullName);
 
   return prisma.repository.create({
@@ -254,6 +291,7 @@ export async function createRepositoryConnection(repoFullName: string) {
       ...repositoryDetails,
       userId: session.user.id,
       connectionStatus: "CONNECTED",
+      webhookId: webhook.id.toString(),
     },
   });
 }

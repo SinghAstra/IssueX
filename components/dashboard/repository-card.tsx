@@ -40,12 +40,14 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
             variant="outline"
             className={cn(
               "px-2.5 py-0.5 text-xs font-semibold",
-              repository.isActive
+              repository.connectionStatus
                 ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                 : "bg-muted text-muted-foreground border-muted"
             )}
           >
-            {repository.isActive ? "Active" : "Inactive"}
+            {repository.connectionStatus === "CONNECTED"
+              ? "Active"
+              : "Inactive"}
           </Badge>
         </div>
 
