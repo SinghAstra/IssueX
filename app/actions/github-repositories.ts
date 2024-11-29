@@ -64,6 +64,7 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
 
     return reposWithLanguages.map(
       (repo): Repository => ({
+        id: repo.id,
         name: repo.name,
         fullName: repo.full_name,
         description: repo.description,
@@ -122,19 +123,14 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
   }
 }
 
-export async function createRepositoryConnection(repositoryDetails: {
-  name: string;
-  fullName: string;
-  githubId: number;
-  description?: string | null;
-  htmlUrl?: string | null;
-}) {
+export async function createRepositoryConnection(repoFullName: string) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
     throw new Error("Unauthorized");
   }
 
+  const repositoryDetails = await fetchGitHubRepositoryDetails(repoFullName);
   // Check if repository already exists for this user
   const existingRepository = await prisma.repository.findUnique({
     where: {

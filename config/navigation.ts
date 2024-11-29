@@ -10,11 +10,6 @@ export const navigation = [
     icon: "gitBranch" as const,
   },
   {
-    name: "Templates",
-    href: "/dashboard/templates",
-    icon: "fileText" as const,
-  },
-  {
     name: "Analytics",
     href: "/dashboard/analytics",
     icon: "barChart" as const,

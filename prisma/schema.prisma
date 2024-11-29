@@ -14,7 +14,7 @@ model Repository {
   githubId    Int       
   userId      String   
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  connectionStatus ConnectionStatus   @default(PENDING)
+  connectionStatus ConnectionStatus   @default(NOT_CONNECTED)
   description      String?
   htmlUrl          String?
   webhookId   String?  
@@ -29,7 +29,7 @@ model Repository {
 
 enum ConnectionStatus {
   CONNECTED
-  PENDING
+  NOT_CONNECTED
 }
 
 

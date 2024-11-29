@@ -1,19 +1,25 @@
-import { useRepositoryConnection } from "@/app/actions/repository-client";
-import { useToast } from "@/hooks/use-toast";
+import { createRepositoryConnection } from "@/app/actions/github-repositories";
 import { cn } from "@/lib/utils";
 import { Repository } from "@/types/repository";
-import { Check, GitFork, Link2, Settings, Star } from "lucide-react";
+import { Check, GitFork, Link2, Star } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { Icons } from "../Icons";
 import { Button, buttonVariants } from "../ui/button";
 
 export function RepositoryCard({ repo }: { repo: Repository }) {
-  const { connectRepository, loading, error } = useRepositoryConnection();
-  const { toast } = useToast();
+  const router = useRouter();
 
-  const handleConnect = () => {
-    connectRepository(repo.fullName);
+  const handleConnect = async () => {
+    switch (repo.connectionStatus) {
+      case "CONNECTED":
+        router.push(`/repositories/${repo.id}`);
+        break;
+      default:
+        const newRepo = await createRepositoryConnection(repo.fullName);
+        router.push(`/repositories/${newRepo.id}/template`);
+    }
   };
 
   const truncateDescription = (description: string | null, maxLength = 50) => {
@@ -32,12 +38,6 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
           text: "Connected",
           icon: <Check className="mr-2 h-4 w-4" />,
         };
-      case "PENDING":
-        return {
-          variant: "default" as const,
-          text: "Continue Setup",
-          icon: <Settings className="mr-2 h-4 w-4" />,
-        };
       default:
         return {
           variant: "default" as const,
@@ -47,15 +47,6 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
     }
   };
   const { variant, text, icon } = getButtonProps();
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: error,
-        description: "Please try again...",
-      });
-    }
-  }, [error, toast]);
 
   return (
     <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-card min-h-[16rem]">
@@ -99,17 +90,8 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
           Github
         </Link>
 
-        <Button
-          variant={variant}
-          className="flex-grow"
-          disabled={loading}
-          onClick={handleConnect}
-        >
-          {loading ? (
-            <Icons.loaderCircle className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            icon
-          )}
+        <Button variant={variant} className="flex-grow" onClick={handleConnect}>
+          {icon}
           {text}
         </Button>
       </div>
