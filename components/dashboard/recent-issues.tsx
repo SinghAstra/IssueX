@@ -70,7 +70,7 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-1">
-                    {issue.aiSuggestion}
+                    {/* {issue.aiSuggestion} */}
                   </p>
                 </div>
               </div>
@@ -80,13 +80,13 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                 <Badge
                   variant="outline"
                   className={cn(
-                    "text-xs",
-                    issue.aiAnalyzed
-                      ? "bg-primary/10 text-primary border-primary/20"
-                      : "bg-muted/10 text-muted-foreground border-muted/20"
+                    "text-xs"
+                    // issue.aiAnalyzed
+                    // ? "bg-primary/10 text-primary border-primary/20"
+                    // : "bg-muted/10 text-muted-foreground border-muted/20"
                   )}
                 >
-                  {issue.aiAnalyzed ? "AI Analyzed" : "Pending Analysis"}
+                  {/* {issue.aiAnalyzed ? "AI Analyzed" : "Pending Analysis"} */}
                 </Badge>
                 <span className="text-sm text-muted-foreground"></span>
               </div>
