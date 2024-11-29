@@ -4,7 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Repository } from "@/types/repository";
 import { Octokit } from "@octokit/rest";
+import fs from "fs";
 import { getServerSession } from "next-auth";
+import path from "path";
 
 export async function fetchGithubRepositories(): Promise<Repository[]> {
   const session = await getServerSession(authOptions);
@@ -123,6 +125,87 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
   }
 }
 
+async function createIssueTemplates(repoFullName: string) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const accessToken = session.accessToken;
+
+  if (!accessToken) {
+    throw new Error("No access token available");
+  }
+
+  const octokit = new Octokit({
+    auth: accessToken,
+  });
+
+  const templateDir = path.join(
+    process.cwd(),
+    "lib",
+    "github",
+    "issue_templates"
+  );
+  const templateFiles = [
+    "improvement.yml",
+    "feature_request.yml",
+    "bug_report.yml",
+  ];
+
+  const owner = repoFullName.split("/")[0];
+  const repo = repoFullName.split("/")[1];
+
+  const existingIssueRepo = await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: ".github/ISSUE_TEMPLATE",
+    message: "Create ISSUE_TEMPLATE directory",
+    content: Buffer.from("").toString("base64"),
+    committer: {
+      name: "IssueX Bot",
+      email: "singhisabhaypratap@gmail.com",
+    },
+    author: {
+      name: "IssueX Bot",
+      email: "singhisabhaypratap@gmail.com",
+    },
+  });
+
+  console.log(
+    "existingIssueRepo --createIssueTemplates is ",
+    existingIssueRepo
+  );
+
+  // for (const templateFile of templateFiles) {
+  //   const filePath = path.join(templateDir, templateFile);
+  //   const fileContent = fs.readFileSync(filePath, "utf8");
+  //   console.log("templateFile is ", templateFile);
+
+  //   try {
+  //     await octokit.repos.createOrUpdateFileContents({
+  //       owner,
+  //       repo,
+  //       path: `.github/ISSUE_TEMPLATE/${templateFile}`,
+  //       message: `Add/Update ${templateFile} issue template`,
+  //       content: Buffer.from(fileContent).toString("base64"),
+  //       committer: {
+  //         name: "IssueX Bot",
+  //         email: "singhisabhaypratap@gmail.com",
+  //       },
+  //       author: {
+  //         name: "IssueX Bot",
+  //         email: "singhisabhaypratap@gmail.com",
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log(`Error creating/updating ${templateFile}:`, error);
+  //     throw error;
+  //   }
+  // }
+}
+
 export async function createRepositoryConnection(repoFullName: string) {
   const session = await getServerSession(authOptions);
 
@@ -145,6 +228,8 @@ export async function createRepositoryConnection(repoFullName: string) {
     // Update existing repository
     return existingRepository;
   }
+
+  // await createIssueTemplates(repoFullName);
 
   return prisma.repository.create({
     data: {
