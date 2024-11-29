@@ -125,7 +125,7 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
   }
 }
 
-async function createIssueTemplates(repoFullName: string) {
+export async function createIssueTemplates(repoFullName: string) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -154,56 +154,74 @@ async function createIssueTemplates(repoFullName: string) {
     "bug_report.yml",
   ];
 
-  const owner = repoFullName.split("/")[0];
-  const repo = repoFullName.split("/")[1];
+  const [owner, repo] = repoFullName.split("/");
 
-  const existingIssueRepo = await octokit.repos.createOrUpdateFileContents({
+  console.log("Before the existingIssueRepo.");
+
+  const parentDirectoryContents = await octokit.repos.getContent({
     owner,
     repo,
-    path: ".github/ISSUE_TEMPLATE",
-    message: "Create ISSUE_TEMPLATE directory",
-    content: Buffer.from("").toString("base64"),
-    committer: {
-      name: "IssueX Bot",
-      email: "singhisabhaypratap@gmail.com",
-    },
-    author: {
-      name: "IssueX Bot",
-      email: "singhisabhaypratap@gmail.com",
-    },
+    path: ".github",
   });
 
-  console.log(
-    "existingIssueRepo --createIssueTemplates is ",
-    existingIssueRepo
-  );
+  console.log("parentDirectoryContents is ", parentDirectoryContents);
 
-  // for (const templateFile of templateFiles) {
-  //   const filePath = path.join(templateDir, templateFile);
-  //   const fileContent = fs.readFileSync(filePath, "utf8");
-  //   console.log("templateFile is ", templateFile);
+  try {
+    const existingContent = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: ".github",
+    });
 
-  //   try {
-  //     await octokit.repos.createOrUpdateFileContents({
-  //       owner,
-  //       repo,
-  //       path: `.github/ISSUE_TEMPLATE/${templateFile}`,
-  //       message: `Add/Update ${templateFile} issue template`,
-  //       content: Buffer.from(fileContent).toString("base64"),
-  //       committer: {
-  //         name: "IssueX Bot",
-  //         email: "singhisabhaypratap@gmail.com",
-  //       },
-  //       author: {
-  //         name: "IssueX Bot",
-  //         email: "singhisabhaypratap@gmail.com",
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log(`Error creating/updating ${templateFile}:`, error);
-  //     throw error;
-  //   }
-  // }
+    console.log("existingContent is ", existingContent);
+
+    if (
+      Array.isArray(existingContent.data) &&
+      existingContent.data.length > 0
+    ) {
+      for (const file of existingContent.data) {
+        await octokit.repos.deleteFile({
+          owner,
+          repo,
+          path: file.path,
+          message: `Remove existing issue template: ${file.name}`,
+          sha: file.sha,
+        });
+      }
+    }
+  } catch (error) {
+    if (!(error instanceof Error && error.message.includes("404"))) {
+      console.log("Error checking existing directory:", error);
+      throw error;
+    }
+  }
+
+  for (const templateFile of templateFiles) {
+    const filePath = path.join(templateDir, templateFile);
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    console.log("templateFile is ", templateFile);
+
+    try {
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: `.github/ISSUE_TEMPLATE/${templateFile}`,
+        message: `Add/Update ${templateFile} issue template`,
+        content: Buffer.from(fileContent).toString("base64"),
+        committer: {
+          name: "IssueX Bot",
+          email: "singhisabhaypratap@gmail.com",
+        },
+        author: {
+          name: "IssueX Bot",
+          email: "singhisabhaypratap@gmail.com",
+        },
+      });
+    } catch (error) {
+      console.log(`Error creating/updating ${templateFile}:`, error);
+      throw error;
+    }
+  }
 }
 
 export async function createRepositoryConnection(repoFullName: string) {
@@ -229,7 +247,7 @@ export async function createRepositoryConnection(repoFullName: string) {
     return existingRepository;
   }
 
-  // await createIssueTemplates(repoFullName);
+  await createIssueTemplates(repoFullName);
 
   return prisma.repository.create({
     data: {
