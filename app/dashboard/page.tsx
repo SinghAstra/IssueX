@@ -1,16 +1,10 @@
 "use client";
 
-import { RecentIssues } from "@/components/dashboard/recent-issues";
-import { StatsCard } from "@/components/dashboard/stats-card";
-import { Icons } from "@/components/Icons";
-import { mockIssues, mockRepositories, mockStats } from "@/data/mock";
-import { RepositoryCard } from "../../components/dashboard/repository-card";
-
 export default function DashboardPage() {
   return (
     <div className="p-8 space-y-8">
       {/* Stats Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Total Repositories"
           value={mockStats.totalRepositories}
@@ -47,7 +41,6 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Repositories Grid */}
       <div>
         <h2 className="text-xl font-semibold mb-4">Connected Repositories</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -57,8 +50,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Issues */}
-      <RecentIssues issues={mockIssues} />
+      <RecentIssues issues={mockIssues} /> */}
     </div>
   );
 }
