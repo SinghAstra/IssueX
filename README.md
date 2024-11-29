@@ -1,4 +1,4 @@
-# GitHub Issue Management System
+# IssueX
 
 ## Project Overview
 
