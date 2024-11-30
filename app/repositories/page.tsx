@@ -42,11 +42,13 @@ function RepositoryPage() {
   useEffect(() => {
     let result = repositories;
 
-    // if (activeFilter === "Connected") {
-    //   result = result.filter((repo) => repo.isConnected);
-    // } else if (activeFilter === "Not Connected") {
-    //   result = result.filter((repo) => !repo.isConnected);
-    // }
+    if (activeFilter === "Connected") {
+      result = result.filter((repo) => repo.connectionStatus === "CONNECTED");
+    } else if (activeFilter === "Not Connected") {
+      result = result.filter(
+        (repo) => repo.connectionStatus === "NOT_CONNECTED"
+      );
+    }
 
     if (searchQuery) {
       const lowercaseQuery = searchQuery.toLowerCase();

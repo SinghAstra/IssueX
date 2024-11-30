@@ -57,7 +57,18 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
   const { variant, text, icon } = getButtonProps();
 
   return (
-    <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-card min-h-[16rem]">
+    <div
+      className="flex flex-col h-full border rounded-lg overflow-hidden bg-card min-h-[16rem]"
+      role="button"
+      tabIndex={0}
+      onClick={handleConnect}
+      onKeyDown={(e) => {
+        // Allow activation with Enter or Space key
+        if (e.key === "Enter" || e.key === " ") {
+          handleConnect();
+        }
+      }}
+    >
       <div className="font-bold text-lg flex mb-2 justify-between p-4">
         {repo.name}
         <div className="flex items-center space-x-4">
