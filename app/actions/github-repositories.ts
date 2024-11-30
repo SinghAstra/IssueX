@@ -8,25 +8,37 @@ import fs from "fs";
 import { getServerSession } from "next-auth";
 import path from "path";
 
-export async function fetchGithubRepositories(): Promise<Repository[]> {
+export async function getOctokitClient() {
   const session = await getServerSession(authOptions);
 
-  console.log("session --fetchGithubRepositories is ", session);
-
   if (!session) {
-    throw new Error("No session available");
+    // Provide more context about why session is not available
+    console.error("No active session found. User might not be authenticated.");
+    throw new Error("Authentication required. Please log in.");
+  }
+
+  // Add more robust type checking for session
+  if (!session.user || !session.user.id) {
+    throw new Error("Invalid session: User information is incomplete");
   }
 
   const accessToken = session.accessToken;
 
   if (!accessToken) {
-    throw new Error("No access token available");
+    throw new Error(
+      "No GitHub access token available. Please reconnect your GitHub account."
+    );
   }
 
+  return {
+    octokit: new Octokit({ auth: accessToken }),
+    userId: session.user.id,
+  };
+}
+
+export async function fetchGithubRepositories(): Promise<Repository[]> {
   try {
-    const octokit = new Octokit({
-      auth: accessToken,
-    });
+    const { octokit, userId } = await getOctokitClient();
 
     const { data: repositories } = await octokit.request("GET /user/repos", {
       per_page: 100,
@@ -35,7 +47,7 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
     });
 
     const connectedRepos = await prisma.repository.findMany({
-      where: { userId: session.user.id },
+      where: { userId },
       select: {
         githubId: true,
         connectionStatus: true,
@@ -48,7 +60,6 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
 
     const reposWithLanguages = await Promise.all(
       repositories.map(async (repo) => {
-        // Fetch languages for each repository
         const { data: languages } = await octokit.request(
           "GET /repos/{owner}/{repo}/languages",
           {
@@ -87,21 +98,7 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
 }
 
 export async function fetchGitHubRepositoryDetails(fullName: string) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
-
-  const accessToken = session.accessToken;
-
-  if (!accessToken) {
-    throw new Error("No access token available");
-  }
-
-  const octokit = new Octokit({
-    auth: accessToken,
-  });
+  const { octokit } = await getOctokitClient();
 
   try {
     const { data: repo } = await octokit.request(`GET /repos/{owner}/{repo}`, {
@@ -117,30 +114,13 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
       htmlUrl: repo.html_url,
     };
   } catch (error) {
-    console.log(
-      "GitHub Repository Fetch Error --fetchGitHubRepositoryDetails:",
-      error
-    );
-    throw new Error("Failed to fetch repository details");
+    console.log("error --fetchGitHubRepositoryDetails:", error);
+    throw error;
   }
 }
 
 export async function createIssueTemplates(repoFullName: string) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
-
-  const accessToken = session.accessToken;
-
-  if (!accessToken) {
-    throw new Error("No access token available");
-  }
-
-  const octokit = new Octokit({
-    auth: accessToken,
-  });
+  const { octokit } = await getOctokitClient();
 
   const templateDir = path.join(
     process.cwd(),
@@ -163,25 +143,41 @@ export async function createIssueTemplates(repoFullName: string) {
       path: ".github",
     });
 
+    console.log("existingContent is ", existingContent);
+    console.log("existingContent.data is ", existingContent.data);
+
     if (
       Array.isArray(existingContent.data) &&
       existingContent.data.length > 0
     ) {
-      for (const file of existingContent.data) {
-        await octokit.repos.deleteFile({
-          owner,
-          repo,
-          path: file.path,
-          message: `Remove existing issue template: ${file.name}`,
-          sha: file.sha,
-        });
+      for (const item of existingContent.data) {
+        console.log("Item details:", item);
+
+        switch (item.type) {
+          case "file":
+            await octokit.repos.deleteFile({
+              owner,
+              repo,
+              path: item.path,
+              message: `Remove existing file: ${item.name}`,
+              sha: item.sha,
+            });
+            console.log(`Deleted file: ${item.path}`);
+            break;
+
+          case "dir":
+            await deleteDirectoryContents(repoFullName, item.path);
+            console.log(`Deleted directory contents: ${item.path}`);
+            break;
+
+          default:
+            console.log(`Unhandled item type: ${item.type} for ${item.path}`);
+        }
       }
     }
   } catch (error) {
-    if (!(error instanceof Error && error.message.includes("404"))) {
-      console.log("Error checking existing directory:", error);
-      throw error;
-    }
+    console.log("error --createIssueTemplate:", error);
+    throw error;
   }
 
   for (const templateFile of templateFiles) {
@@ -213,30 +209,47 @@ export async function createIssueTemplates(repoFullName: string) {
 
 async function createWebhook(repoFullName: string) {
   try {
-    const session = await getServerSession(authOptions);
+    const { octokit } = await getOctokitClient();
 
-    if (!session) {
-      throw new Error("Unauthorized");
+    let WEBHOOK_URL;
+
+    if (process.env.NODE_ENV === "development") {
+      WEBHOOK_URL = "https://issuex.vercel.app/api/webhook";
+    } else {
+      WEBHOOK_URL = process.env.NEXT_AUTH_URL + "/api/webhook";
     }
 
-    const accessToken = session.accessToken;
+    console.log("WEBHOOK_URL is ", WEBHOOK_URL);
 
-    if (!accessToken) {
-      throw new Error("No access token available");
-    }
-
-    const octokit = new Octokit({
-      auth: accessToken,
-    });
-
-    const WEBHOOK_URL = process.env.NEXT_AUTH_URL + "/api/webhook";
     const WEBHOOK_SECRET = process.env.NEXT_AUTH_SECRET;
+    console.log("WEBHOOK_SECRET is ", WEBHOOK_SECRET);
 
     if (!WEBHOOK_URL || !WEBHOOK_SECRET) {
       throw new Error("Webhook URL or secret not configured");
     }
 
     const [owner, repo] = repoFullName.split("/");
+
+    console.log("owner is ", owner);
+    console.log("repo is ", repo);
+
+    const { data: existingWebhooks } = await octokit.repos.listWebhooks({
+      owner,
+      repo,
+    });
+
+    existingWebhooks.map((webhook) => {
+      console.log("webhook is ", webhook);
+    });
+
+    const existingWebhook = existingWebhooks.find(
+      (webhook) => webhook.config.url === WEBHOOK_URL
+    );
+
+    if (existingWebhook) {
+      console.log("Webhook already exists:", existingWebhook);
+      return existingWebhook;
+    }
 
     const { data: webhook } = await octokit.repos.createWebhook({
       owner,
@@ -250,6 +263,8 @@ async function createWebhook(repoFullName: string) {
       active: true,
     });
 
+    console.log("webhook is ", webhook);
+
     return webhook;
   } catch (error) {
     console.log("Error creating webhook:", error);
@@ -258,25 +273,20 @@ async function createWebhook(repoFullName: string) {
 }
 
 export async function createRepositoryConnection(repoFullName: string) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  const { userId } = await getOctokitClient();
 
   const repositoryDetails = await fetchGitHubRepositoryDetails(repoFullName);
   // Check if repository already exists for this user
   const existingRepository = await prisma.repository.findUnique({
     where: {
       userId_fullName: {
-        userId: session.user.id,
+        userId,
         fullName: repositoryDetails.fullName,
       },
     },
   });
 
   if (existingRepository) {
-    // Update existing repository
     return existingRepository;
   }
 
@@ -289,7 +299,7 @@ export async function createRepositoryConnection(repoFullName: string) {
   return prisma.repository.create({
     data: {
       ...repositoryDetails,
-      userId: session.user.id,
+      userId,
       connectionStatus: "CONNECTED",
       webhookId: webhook.id.toString(),
     },
@@ -329,4 +339,38 @@ export async function fetchRepositoryConnectionStatus(fullName: string) {
   return {
     status: "NOT_CONNECTED",
   };
+}
+
+async function deleteDirectoryContents(
+  repoFullName: string,
+  directoryPath: string
+) {
+  try {
+    const { octokit } = await getOctokitClient();
+    const [owner, repo] = repoFullName.split("/");
+    const { data: dirContents } = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: directoryPath,
+    });
+
+    if (Array.isArray(dirContents) && dirContents.length > 0) {
+      for (const item of dirContents) {
+        if (item.type === "file") {
+          await octokit.repos.deleteFile({
+            owner,
+            repo,
+            path: item.path,
+            message: `Remove file from ${directoryPath}`,
+            sha: item.sha,
+          });
+        } else if (item.type === "dir") {
+          await deleteDirectoryContents(repoFullName, item.path);
+        }
+      }
+    }
+  } catch (error) {
+    console.log("error --deleteDirectoryContents", error);
+    throw error;
+  }
 }
