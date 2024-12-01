@@ -32,6 +32,7 @@ enum ConnectionStatus {
   NOT_CONNECTED
 }
 
+
 model Issue {
   id            String    @id @default(cuid())
   githubIssueId Int      
@@ -47,25 +48,23 @@ model Issue {
   @@index([githubIssueId])
 }
 
-
-
-enum IssueStatus {
-  OPEN
-  CLOSED
-}
-
 model Comment {
   id            String    @id @default(cuid())
   githubCommentId Int      
   issueId       String
   issue         Issue     @relation(fields: [issueId], references: [id], onDelete: Cascade)
   body          String
+  isAiGenerated Boolean  @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([githubCommentId])
 }
 
+enum IssueStatus {
+  OPEN
+  CLOSED
+}
 
 model User {
   id                  String    @id @default(cuid())

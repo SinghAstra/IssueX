@@ -19,4 +19,9 @@ export const navigation = [
     href: "/dashboard/settings",
     icon: "settings" as const,
   },
+  {
+    name: "Chat",
+    href: "/chat",
+    icon: "bot" as const,
+  },
 ];

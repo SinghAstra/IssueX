@@ -176,9 +176,6 @@ export async function createIssueTemplates(repoFullName: string) {
       }
     }
   } catch (error) {
-    console.log("error instanceof Error is ", error instanceof Error);
-    // console.log("error.status === 404 is ",error?.status === 404);
-
     if (error instanceof Error && "status" in error && error.status === 404) {
       console.log(".github directory does not exist. Continuing...");
       return;

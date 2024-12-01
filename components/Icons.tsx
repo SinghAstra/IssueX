@@ -3,6 +3,7 @@ import {
   AlertCircle,
   ArrowLeft,
   BarChart3Icon,
+  Bot,
   BugIcon,
   ClockIcon,
   FileTextIcon,
@@ -29,4 +30,5 @@ export const Icons = {
   settings: SettingsIcon,
   barChart: BarChart3Icon,
   fileText: FileTextIcon,
+  bot: Bot,
 };
