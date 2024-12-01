@@ -5,7 +5,7 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { MessageItem } from "@/components/chat/message-item";
 import { TypingIndicator } from "@/components/chat/typing-indicator";
 import { generateAIResponse } from "@/lib/ai/gemini";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Message {
   sender: "user" | "ai";
@@ -20,10 +20,15 @@ export default function ChatPage() {
 
   const scrollToBottom = useCallback(() => {
     if (messagesContainerRef.current) {
-      const container = messagesContainerRef.current;
-      container.scrollTop = container.scrollHeight;
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
     }
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(scrollToBottom, 50);
+    return () => clearTimeout(timer);
+  }, [messages, isLoading, scrollToBottom]);
 
   const handleSendMessage = async (message: string) => {
     const newMessage: Message = {
@@ -76,7 +81,6 @@ export default function ChatPage() {
             <TypingIndicator />
           </div>
         )}
-        <div ref={messagesContainerRef} />
       </div>
 
       <ChatInput onSend={handleSendMessage} isLoading={isLoading} />

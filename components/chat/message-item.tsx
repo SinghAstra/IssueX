@@ -2,8 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Bot, Clipboard, User } from "lucide-react";
+import { Bot, Check, Clipboard, User } from "lucide-react";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import remarkGfm from "remark-gfm";
 
 interface MessageItemProps {
   sender: "user" | "ai";
@@ -18,6 +22,34 @@ export function MessageItem({ sender, message, timestamp }: MessageItemProps) {
     navigator.clipboard.writeText(message);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const renderMessage = () => {
+    if (sender === "ai") {
+      return (
+        <ReactMarkdown
+          components={{
+            code(props) {
+              const { children, className } = props;
+              const match = /language-(\w+)/.exec(className || "");
+              return match ? (
+                <SyntaxHighlighter style={oneDark} language={match[1]}>
+                  {String(children).replace(/\n$/, "")}
+                </SyntaxHighlighter>
+              ) : (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              );
+            },
+          }}
+          remarkPlugins={[remarkGfm]}
+        >
+          {message}
+        </ReactMarkdown>
+      );
+    }
+    return message;
   };
 
   return (
@@ -40,26 +72,38 @@ export function MessageItem({ sender, message, timestamp }: MessageItemProps) {
             : "bg-secondary text-secondary-foreground"
         )}
       >
-        <div className="flex flex-col gap-2">
-          <div className="flex items-start justify-between gap-2">
-            <p className="whitespace-pre-wrap">{message}</p>
+        <div className="flex flex-col">
+          {sender !== "user" && (
             <Button
+              size={"sm"}
               variant="ghost"
-              size="icon"
-              className={cn(
-                "opacity-0 group-hover:opacity-100 transition-opacity -mr-2 -mt-2",
-                sender === "user"
-                  ? "hover:bg-primary/90 text-primary-foreground"
-                  : "hover:bg-accent/30 text-secondary-foreground"
-              )}
+              className={
+                "ml-auto bg-accent text-secondary-foreground -mt-4 -mr-4 text-xs"
+              }
               onClick={copyToClipboard}
             >
-              <Clipboard className={cn("h-4 w-4", copied && "text-primary")} />
+              {copied ? (
+                <>
+                  <Check className="h-4 w-4 mr-1 " />
+                  copied
+                </>
+              ) : (
+                <>
+                  <Clipboard className="h-4 w-4 mr-1 " />
+                  copy
+                </>
+              )}
             </Button>
+          )}
+          <div className="flex items-start justify-between gap-2">
+            <p className="whitespace-pre-wrap">{renderMessage()}</p>
           </div>
           {timestamp && (
-            <time className="text-xs opacity-50">
-              {timestamp.toLocaleTimeString()}
+            <time className="text-xs opacity-50 ml-auto">
+              {timestamp.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </time>
           )}
         </div>

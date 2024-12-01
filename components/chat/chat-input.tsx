@@ -1,7 +1,7 @@
 "use client";
 
 import { Textarea } from "@/components/ui/textarea";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { MessageActions } from "./message-actions";
 
 interface ChatInputProps {
@@ -11,7 +11,6 @@ interface ChatInputProps {
 
 export function ChatInput({ onSend, isLoading }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
     if (!message.trim()) return;
@@ -31,17 +30,14 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
       <div className="flex justify-end text-xs text-muted-foreground px-2">
         <span>Press Shift + Enter for new line</span>
       </div>
-      {/* Message composition area */}
-      <div className="flex items-end gap-2">
+      <div className="flex items-start gap-2">
         <div className="flex-1 relative">
           <Textarea
-            ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
-            className="min-h-[50px] max-h-[200px] pr-20 bg-input border-border focus:ring-2 focus:ring-ring resize-none rounded-xl"
-            rows={1}
+            className="min-h-[40px] max-h-[600px] pr-20 bg-input border-border focus:ring-2 focus:ring-ring resize-none rounded-xl"
           />
         </div>
 

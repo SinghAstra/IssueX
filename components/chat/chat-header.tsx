@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bot, MoreVertical, RefreshCw, Settings } from "lucide-react";
+import { Bot, MoreVertical, RefreshCw } from "lucide-react";
 
 interface ChatHeaderProps {
   onClear: () => void;
@@ -32,10 +32,6 @@ export function ChatHeader({ onClear }: ChatHeaderProps) {
           <DropdownMenuItem onClick={onClear}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Clear Chat
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
