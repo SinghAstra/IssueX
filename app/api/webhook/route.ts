@@ -1,10 +1,11 @@
-// app/api/webhook/route.ts
-import { getOctokitClient } from "@/app/actions/github-repositories";
 import { generateAIResponse } from "@/lib/ai/gemini";
+import { authOptions } from "@/lib/auth";
 import { categorizeIssue } from "@/lib/issue";
 import { prisma } from "@/lib/prisma";
 import { createAIPrompt } from "@/lib/prompt";
+import { Octokit } from "@octokit/rest";
 import crypto from "crypto";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 function verifyGithubWebhook(
@@ -54,7 +55,32 @@ export async function postGitHubComment(
   issueNumber: number,
   body: string
 ) {
-  const { octokit } = await getOctokitClient();
+  console.log("In postGithubComment");
+  const session = await getServerSession(authOptions);
+
+  console.log("session --postGitHubComment is ", session);
+
+  if (!session) {
+    // Provide more context about why session is not available
+    console.error("No active session found. User might not be authenticated.");
+    throw new Error("Authentication required. Please log in.");
+  }
+
+  // Add more robust type checking for session
+  if (!session.user || !session.user.id) {
+    throw new Error("Invalid session: User information is incomplete");
+  }
+
+  const accessToken = session.accessToken;
+
+  if (!accessToken) {
+    throw new Error(
+      "No GitHub access token available. Please reconnect your GitHub account."
+    );
+  }
+
+  const octokit = new Octokit({ auth: accessToken });
+
   const [owner, repo] = repoFullName.split("/");
 
   try {
@@ -64,6 +90,8 @@ export async function postGitHubComment(
       issue_number: issueNumber,
       body,
     });
+
+    console.log("comment --postGithubComment is ", response.data);
     return response.data;
   } catch (error) {
     console.log("error --postGithubComment");
