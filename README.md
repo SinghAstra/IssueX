@@ -20,33 +20,14 @@ An automated system to enhance GitHub issue management through AI-powered analys
   - Feature Request
   - Improvement Proposal
 
-### 3. Issue Templates Structure
-
-- Bug Report Template:
-  - Description
-  - Steps to Reproduce
-  - Expected Behavior
-  - Actual Behavior
-  - System Information
-- Feature Request Template:
-  - Problem Statement
-  - Proposed Solution
-  - Alternative Solutions
-  - Additional Context
-- Improvement Template:
-  - Current Functionality
-  - Proposed Enhancement
-  - Expected Benefits
-  - Implementation Suggestions
-
-### 4. Webhook Implementation
+### 3. Webhook Implementation
 
 - Set up GitHub webhooks to monitor:
   - Issue creation
   - Pull request creation
   - Comments
 
-### 5. AI Integration
+### 4. AI Integration
 
 #### For Bug Reports:
 
