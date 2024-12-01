@@ -53,61 +53,75 @@ async function handleIssueEvent(
   data: GitHubWebhookPayload,
   repositoryId: string
 ) {
-  console.log("In handleIssueEvent: ");
-  const { action, issue, repository } = data;
-  console.log("action is ", action);
-  console.log("issue is ", issue);
-  console.log("repository is ", repository);
+  try {
+    console.log("In handleIssueEvent: ");
+    const { action, issue, repository } = data;
+    console.log("action is ", action);
+    console.log("issue is ", issue);
+    console.log("repository is ", repository);
 
-  if (action !== "opened") return;
+    if (action !== "opened") return;
 
-  const existingRepo = await prisma.repository.findUnique({
-    where: { id: repositoryId },
-  });
+    const existingRepo = await prisma.repository.findUnique({
+      where: { id: repositoryId },
+    });
 
-  console.log("existingRepo is ", existingRepo);
+    console.log("existingRepo is ", existingRepo);
 
-  if (!existingRepo) {
-    console.log("Repository not found");
-    return;
-  }
+    if (!existingRepo) {
+      console.log("Repository not found");
+      return;
+    }
 
-  const issueType = categorizeIssue(issue);
-  console.log("issueType is ", issueType);
-  const createdIssue = await prisma.issue.create({
-    data: {
+    const issueType = categorizeIssue(issue);
+    console.log("issueType is ", issueType);
+    const issueData = {
       githubIssueId: issue.id,
       repositoryId: existingRepo.id,
       issueType,
       title: issue.title,
       body: issue.body,
       status: "OPEN",
-    },
-  });
-  console.log("createdIssue is ", createdIssue);
-
-  const aiPrompt = createAIPrompt(issue, issueType);
-  console.log("aiPrompt is ", aiPrompt);
-  const aiResponse = await generateAIResponse(aiPrompt);
-  console.log("aiResponse is ", aiResponse);
-
-  if (aiResponse) {
-    const githubComment = await postGitHubComment(
-      repository.full_name,
-      issue.number,
-      aiResponse.text
-    );
-
-    console.log("githubComment is ", githubComment);
-
-    await prisma.comment.create({
+    };
+    console.log("issueData is ", issueData);
+    const createdIssue = await prisma.issue.create({
       data: {
-        githubCommentId: githubComment.id,
-        issueId: createdIssue.id,
-        body: aiResponse.text,
-        isAiGenerated: true,
+        githubIssueId: issue.id,
+        repositoryId: existingRepo.id,
+        issueType,
+        title: issue.title,
+        body: issue.body,
+        status: "OPEN",
       },
     });
+    console.log("createdIssue is ", createdIssue);
+
+    const aiPrompt = createAIPrompt(issue, issueType);
+    console.log("aiPrompt is ", aiPrompt);
+    const aiResponse = await generateAIResponse(aiPrompt);
+    console.log("aiResponse is ", aiResponse);
+
+    if (aiResponse) {
+      const githubComment = await postGitHubComment(
+        repository.full_name,
+        issue.number,
+        aiResponse.text
+      );
+
+      console.log("githubComment is ", githubComment);
+
+      await prisma.comment.create({
+        data: {
+          githubCommentId: githubComment.id,
+          issueId: createdIssue.id,
+          body: aiResponse.text,
+          isAiGenerated: true,
+        },
+      });
+    }
+  } catch (error) {
+    console.log("error --handleIssueEvent");
+    throw error;
   }
 }
 
