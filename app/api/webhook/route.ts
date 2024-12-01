@@ -1,6 +1,6 @@
 // app/api/webhook/route.ts
+import { getOctokitClient } from "@/app/actions/github-repositories";
 import { generateAIResponse } from "@/lib/ai/gemini";
-import { postGitHubComment } from "@/lib/github/client";
 import { categorizeIssue } from "@/lib/issue";
 import { prisma } from "@/lib/prisma";
 import { createAIPrompt } from "@/lib/prompt";
@@ -47,6 +47,28 @@ interface GitHubWebhookPayload {
     };
   };
   issue: GitHubWebhookIssue;
+}
+
+export async function postGitHubComment(
+  repoFullName: string,
+  issueNumber: number,
+  body: string
+) {
+  const { octokit } = await getOctokitClient();
+  const [owner, repo] = repoFullName.split("/");
+
+  try {
+    const response = await octokit.issues.createComment({
+      owner,
+      repo,
+      issue_number: issueNumber,
+      body,
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error --postGithubComment");
+    throw error;
+  }
 }
 
 async function handleIssueEvent(
