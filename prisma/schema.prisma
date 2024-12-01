@@ -35,6 +35,7 @@ enum ConnectionStatus {
 
 model Issue {
   id            String    @id @default(cuid())
+  issueType     IssueType @default(BUG)
   githubIssueId Int      
   repositoryId  String
   repository    Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
@@ -46,6 +47,13 @@ model Issue {
   updatedAt     DateTime    @updatedAt
 
   @@index([githubIssueId])
+}
+
+enum IssueType {
+  BUG
+  FEATURE
+  IMPROVEMENT
+  OTHER
 }
 
 model Comment {
