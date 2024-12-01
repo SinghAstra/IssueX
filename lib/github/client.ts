@@ -9,12 +9,13 @@ export async function postGitHubComment(
   const [owner, repo] = repoFullName.split("/");
 
   try {
-    await octokit.issues.createComment({
+    const response = await octokit.issues.createComment({
       owner,
       repo,
       issue_number: issueNumber,
       body,
     });
+    return response.data;
   } catch (error) {
     console.log("error --postGithubComment");
     throw error;

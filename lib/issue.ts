@@ -1,6 +1,7 @@
-import { Issue } from "@prisma/client";
+import { GitHubWebhookIssue } from "@/app/api/webhook/route";
+import { IssueType } from "@prisma/client";
 
-export function categorizeIssue(issue: Issue) {
+export function categorizeIssue(issue: GitHubWebhookIssue): IssueType {
   const title = issue.title.toLowerCase();
   const body = issue.body?.toLowerCase() || "";
 
@@ -11,16 +12,16 @@ export function categorizeIssue(issue: Issue) {
     body.includes("reproduce") ||
     body.includes("unexpected behavior")
   )
-    return "bug";
+    return "BUG";
 
   if (
     title.includes("feature") ||
     title.includes("request") ||
     title.includes("enhancement")
   )
-    return "feature";
+    return "FEATURE";
 
-  return "improvement";
+  return "IMPROVEMENT";
 }
 
 export function isBotTagged(comment: string, botUsername: string) {

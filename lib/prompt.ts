@@ -1,6 +1,10 @@
-import { Issue, IssueType } from "@prisma/client";
+import { GitHubWebhookIssue } from "@/app/api/webhook/route";
+import { IssueType } from "@prisma/client";
 
-export function createAIPrompt(issue: Issue, issueType: IssueType) {
+export function createAIPrompt(
+  issue: GitHubWebhookIssue,
+  issueType: IssueType
+) {
   const basePrompts = {
     BUG: (title: string, body: string) => `
     Bug Report Analysis:

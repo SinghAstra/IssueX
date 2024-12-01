@@ -1,5 +1,9 @@
 // app/api/webhook/route.ts
+import { generateAIResponse } from "@/lib/ai/gemini";
+import { postGitHubComment } from "@/lib/github/client";
+import { categorizeIssue } from "@/lib/issue";
 import { prisma } from "@/lib/prisma";
+import { createAIPrompt } from "@/lib/prompt";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
 
@@ -15,6 +19,96 @@ function verifyGithubWebhook(
   );
   const checksum = Buffer.from(signature, "utf8");
   return crypto.timingSafeEqual(digest, checksum);
+}
+
+export interface GitHubWebhookIssue {
+  id: number;
+  number: number;
+  title: string;
+  body: string | null;
+  state: "open" | "closed";
+  created_at: string;
+  updated_at: string;
+  user: {
+    login: string;
+    id: number;
+  };
+}
+
+interface GitHubWebhookPayload {
+  action: string;
+  repository: {
+    id: number;
+    name: string;
+    full_name: string;
+    owner: {
+      login: string;
+      id: number;
+    };
+  };
+  issue: GitHubWebhookIssue;
+}
+
+async function handleIssueEvent(
+  data: GitHubWebhookPayload,
+  repositoryId: string
+) {
+  console.log("In handleIssueEvent: ");
+  const { action, issue, repository } = data;
+  console.log("action is ", action);
+  console.log("issue is ", issue);
+  console.log("repository is ", repository);
+
+  if (action !== "opened") return;
+
+  const existingRepo = await prisma.repository.findUnique({
+    where: { id: repositoryId },
+  });
+
+  console.log("existingRepo is ", existingRepo);
+
+  if (!existingRepo) {
+    console.log("Repository not found");
+    return;
+  }
+
+  const issueType = categorizeIssue(issue);
+  console.log("issueType is ", issueType);
+  const createdIssue = await prisma.issue.create({
+    data: {
+      githubIssueId: issue.id,
+      repositoryId: existingRepo.id,
+      issueType,
+      title: issue.title,
+      body: issue.body,
+      status: "OPEN",
+    },
+  });
+  console.log("createdIssue is ", createdIssue);
+
+  const aiPrompt = createAIPrompt(issue, issueType);
+  console.log("aiPrompt is ", aiPrompt);
+  const aiResponse = await generateAIResponse(aiPrompt);
+  console.log("aiResponse is ", aiResponse);
+
+  if (aiResponse) {
+    const githubComment = await postGitHubComment(
+      repository.full_name,
+      issue.number,
+      aiResponse.text
+    );
+
+    console.log("githubComment is ", githubComment);
+
+    await prisma.comment.create({
+      data: {
+        githubCommentId: githubComment.id,
+        issueId: createdIssue.id,
+        body: aiResponse.text,
+        isAiGenerated: true,
+      },
+    });
+  }
 }
 
 export async function POST(req: Request) {
@@ -56,17 +150,17 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("isValid is ", isValid);
+    console.log("githubEvent is ", githubEvent);
     console.log("data is ", data);
 
-    // switch (githubEvent) {
-    //   case "issues":
-    //     await handleIssueEvent(data, repository.id);
-    //     break;
-    //   case "issue_comment":
-    //     await handleIssueCommentEvent(data, repository.id);
-    //     break;
-    // }
+    switch (githubEvent) {
+      case "issues":
+        await handleIssueEvent(data, repository.id);
+        break;
+      //   case "issue_comment":
+      //     await handleIssueCommentEvent(data, repository.id);
+      //     break;
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
