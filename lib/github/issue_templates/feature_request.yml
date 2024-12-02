@@ -1,62 +1,75 @@
-name: 🚀 Feature
-description: "Submit a proposal for a new feature"
+name: 🚀 Feature Request
+description: "Propose a new feature"
 title: "🚀 Feature: "
 labels: [feature]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        We value your time and efforts to submit this Feature request form. 🙏
   - type: textarea
     id: feature-description
     validations:
       required: true
     attributes:
-      label: "🔖 Feature description"
-      description: "A clear and concise description of what the feature is."
-      placeholder: "You should add ..."
+      label: "📝 Feature Overview"
+      description: "Describe the feature concisely"
+      placeholder: "A new feature that allows users to..."
+
   - type: textarea
-    id: pitch
+    id: user-problem
     validations:
       required: true
     attributes:
-      label: "🎤 Why is this feature needed ?"
-      description: "Please explain why this feature should be implemented and how it would be used. Add examples, if applicable."
-      placeholder: "In my use-case, ..."
+      label: "🎯 Problem to Solve"
+      description: "What user problem or pain point does this feature address?"
+      placeholder: "Current users struggle with... This feature would help by..."
+
   - type: textarea
-    id: solution
+    id: proposed-solution
     validations:
       required: true
     attributes:
-      label: "✌️ How do you aim to achieve this?"
-      description: "A clear and concise description of what you want to happen."
-      placeholder: "I want this feature to, ..."
+      label: "💡 Proposed Solution"
+      description: "Outline the proposed implementation"
+      placeholder: "Implement a [feature type] that enables users to..."
+
   - type: textarea
-    id: alternative
+    id: user-flow
+    validations:
+      required: true
+    attributes:
+      label: "🚶 User Journey"
+      description: "Describe the step-by-step user interaction"
+      placeholder: "1. User navigates to...
+2. User clicks/selects...
+3. System responds by...
+4. User achieves desired outcome..."
+
+  - type: textarea
+    id: ui-mockup
     validations:
       required: false
     attributes:
-      label: "🔄️ Additional Information"
-      description: "A clear and concise description of any alternative solutions or additional solutions you've considered."
-      placeholder: "I tried, ..."
+      label: "🖼️ UI Concept (Optional)"
+      description: "Describe or sketch out potential UI elements"
+      placeholder: "The feature would include:
+- A button in [location]
+- A modal/popup with...
+- Interaction would look like..."
+
   - type: checkboxes
-    id: no-duplicate-issues
+    id: prior-research
     attributes:
-      label: "👀 Have you spent some time to check if this feature request has been raised before?"
+      label: "🕵️ Pre-Submission Checks"
       options:
-        - label: "I checked and didn't find similar issue"
+        - label: "I've checked for existing similar feature requests"
           required: true
-  - type: checkboxes
-    id: read-code-of-conduct
-    attributes:
-      label: "🏢 Have you read the Code of Conduct?"
-      options:
-        - label: "I have read the [Contributing Guidelines](https://github.com/code100x/job-board/blob/main/CONTRIBUTING.md)"
+        - label: "I understand this is a feature request, not a bug report"
           required: true
+
   - type: dropdown
-    id: willing-to-submit-pr
+    id: contribution
     attributes:
-      label: Are you willing to submit PR?
-      description: This is absolutely not required, but we are happy to guide you in the contribution process.
+      label: "🤝 Contribution Interest"
+      description: "Would you like to help implement this feature?"
       options:
-        - "Yes I am willing to submit a PR!"
+        - "I'm interested in submitting a PR"
+        - "Looking for guidance"
+        - "Just submitting the idea"
