@@ -23,7 +23,7 @@ export const authOptions = {
         },
       },
       profile(profile) {
-        console.log("🔵 GitHub Profile Data:", profile);
+        // console.log("🔵 GitHub Profile Data:", profile);
         return {
           id: profile.id.toString(),
           name: profile.name || profile.login,
@@ -35,18 +35,18 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    signIn: async ({ user, account, profile }) => {
-      console.log("📥 Sign In Callback:");
-      console.log("- User:", user);
-      console.log("- Account:", account);
-      console.log("- Profile:", profile);
+    signIn: async () => {
+      // console.log("📥 Sign In Callback:");
+      // console.log("- User:", user);
+      // console.log("- Account:", account);
+      // console.log("- Profile:", profile);
       return true;
     },
-    session: async ({ session, user, token }) => {
-      console.log("🔑 Session Callback:");
-      console.log("- Original Session:", { ...session });
-      console.log("- User:", user);
-      console.log("- Token:", token);
+    session: async ({ session, token }) => {
+      // console.log("🔑 Session Callback:");
+      // console.log("- Original Session:", { ...session });
+      // console.log("- User:", user);
+      // console.log("- Token:", token);
 
       if (session.user) {
         session.user.id = token.id as string;
@@ -58,15 +58,15 @@ export const authOptions = {
       return session;
     },
     jwt: async ({ token, user, account, profile }) => {
-      console.log("🎫 JWT Callback:");
-      console.log("- Original Token:", { ...token });
-      console.log("- User:", user);
-      console.log("- Account:", account);
-      console.log("- Profile:", profile);
+      // console.log("🎫 JWT Callback:");
+      // console.log("- Original Token:", { ...token });
+      // console.log("- User:", user);
+      // console.log("- Account:", account);
+      // console.log("- Profile:", profile);
 
       if (profile && account?.provider === "github") {
         const githubProfile = profile as GithubProfile;
-        console.log("githubProfile is ", githubProfile);
+        // console.log("githubProfile is ", githubProfile);
         token.githubUsername = githubProfile.login;
       }
 

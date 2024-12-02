@@ -12,18 +12,15 @@ export async function getOctokitClient() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    // Provide more context about why session is not available
-    console.error("No active session found. User might not be authenticated.");
+    console.log("No active session found. User might not be authenticated.");
     throw new Error("Authentication required. Please log in.");
   }
 
-  // Add more robust type checking for session
   if (!session.user || !session.user.id) {
     throw new Error("Invalid session: User information is incomplete");
   }
 
   const accessToken = session.accessToken;
-
   if (!accessToken) {
     throw new Error(
       "No GitHub access token available. Please reconnect your GitHub account."
@@ -120,7 +117,7 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
 }
 
 export async function createIssueTemplates(repoFullName: string) {
-  const { octokit } = await getOctokitClient();
+  const { octokit, userId } = await getOctokitClient();
 
   const templateDir = path.join(
     process.cwd(),
@@ -134,9 +131,12 @@ export async function createIssueTemplates(repoFullName: string) {
     "bug_report.yml",
   ];
 
+  console.log("userId --createIssueTemplates is ", userId);
+
   const [owner, repo] = repoFullName.split("/");
 
   for (const templateFile of templateFiles) {
+    console.log("templateFile is ", templateFile);
     const filePath = path.join(templateDir, templateFile);
     const fileContent = fs.readFileSync(filePath, "utf8");
 
