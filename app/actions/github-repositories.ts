@@ -116,57 +116,10 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
   }
 }
 
-// export async function deleteExistingIssueTemplates(repoFullName: string) {
-//   const { octokit } = await getOctokitClient();
-
-//   const [owner, repo] = repoFullName.split("/");
-
-//   try {
-//     const existingContent = await octokit.repos.getContent({
-//       owner,
-//       repo,
-//       path: ".github",
-//     });
-
-//     if (
-//       Array.isArray(existingContent.data) &&
-//       existingContent.data.length > 0
-//     ) {
-//       for (const file of existingContent.data) {
-//         await octokit.repos.deleteFile({
-//           owner,
-//           repo,
-//           path: file.path,
-//           message: `Remove existing issue template: ${file.name}`,
-//           sha: file.sha,
-//         });
-//       }
-//     }
-//   } catch (error) {
-//     if (!(error instanceof Error && error.message.includes("404"))) {
-//       console.log("");
-//     }
-//   }
-// }
-
-export async function createIssueTemplates(repoFullName: string) {
-  const { octokit } = await getOctokitClient();
-
-  const templateDir = path.join(
-    process.cwd(),
-    "lib",
-    "github",
-    "issue_templates"
-  );
-  const templateFiles = [
-    "improvement.yml",
-    "feature_request.yml",
-    "bug_report.yml",
-  ];
-
-  const [owner, repo] = repoFullName.split("/");
-
+export async function deleteExistingRepository(repoFullName: string) {
   try {
+    const { octokit } = await getOctokitClient();
+    const [owner, repo] = repoFullName.split("/");
     const existingContent = await octokit.repos.getContent({
       owner,
       repo,
@@ -211,8 +164,28 @@ export async function createIssueTemplates(repoFullName: string) {
       return;
     }
     console.log("error --createIssueTemplate.");
-    throw error;
   }
+}
+
+export async function createIssueTemplates(repoFullName: string) {
+  const { octokit } = await getOctokitClient();
+
+  const templateDir = path.join(
+    process.cwd(),
+    "lib",
+    "github",
+    "issue_templates"
+  );
+  const templateFiles = [
+    "improvement.yml",
+    "feature_request.yml",
+    "bug_report.yml",
+  ];
+
+  const [owner, repo] = repoFullName.split("/");
+  console.log("Before deleteExistingRepository");
+  await deleteExistingRepository(repoFullName);
+  console.log("After deleteExistingRepository");
 
   for (const templateFile of templateFiles) {
     console.log("templateFile is ", templateFile);
