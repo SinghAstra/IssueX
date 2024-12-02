@@ -50,7 +50,7 @@ interface GitHubWebhookPayload {
   issue: GitHubWebhookIssue;
 }
 
-export async function postGitHubComment(
+async function postGitHubComment(
   repoFullName: string,
   issueNumber: number,
   body: string
@@ -62,7 +62,7 @@ export async function postGitHubComment(
 
   if (!session) {
     // Provide more context about why session is not available
-    console.error("No active session found. User might not be authenticated.");
+    console.log("No active session found. User might not be authenticated.");
     throw new Error("Authentication required. Please log in.");
   }
 
