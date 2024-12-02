@@ -116,8 +116,41 @@ export async function fetchGitHubRepositoryDetails(fullName: string) {
   }
 }
 
+// export async function deleteExistingIssueTemplates(repoFullName: string) {
+//   const { octokit } = await getOctokitClient();
+
+//   const [owner, repo] = repoFullName.split("/");
+
+//   try {
+//     const existingContent = await octokit.repos.getContent({
+//       owner,
+//       repo,
+//       path: ".github",
+//     });
+
+//     if (
+//       Array.isArray(existingContent.data) &&
+//       existingContent.data.length > 0
+//     ) {
+//       for (const file of existingContent.data) {
+//         await octokit.repos.deleteFile({
+//           owner,
+//           repo,
+//           path: file.path,
+//           message: `Remove existing issue template: ${file.name}`,
+//           sha: file.sha,
+//         });
+//       }
+//     }
+//   } catch (error) {
+//     if (!(error instanceof Error && error.message.includes("404"))) {
+//       console.log("");
+//     }
+//   }
+// }
+
 export async function createIssueTemplates(repoFullName: string) {
-  const { octokit, userId } = await getOctokitClient();
+  const { octokit } = await getOctokitClient();
 
   const templateDir = path.join(
     process.cwd(),
@@ -131,9 +164,55 @@ export async function createIssueTemplates(repoFullName: string) {
     "bug_report.yml",
   ];
 
-  console.log("userId --createIssueTemplates is ", userId);
-
   const [owner, repo] = repoFullName.split("/");
+
+  try {
+    const existingContent = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: ".github",
+    });
+
+    console.log("existingContent is ", existingContent);
+    console.log("existingContent.data is ", existingContent.data);
+
+    if (
+      Array.isArray(existingContent.data) &&
+      existingContent.data.length > 0
+    ) {
+      for (const item of existingContent.data) {
+        console.log("Item details:", item);
+
+        switch (item.type) {
+          case "file":
+            await octokit.repos.deleteFile({
+              owner,
+              repo,
+              path: item.path,
+              message: `Remove existing file: ${item.name}`,
+              sha: item.sha,
+            });
+            console.log(`Deleted file: ${item.path}`);
+            break;
+
+          case "dir":
+            await deleteDirectoryContents(repoFullName, item.path);
+            console.log(`Deleted directory contents: ${item.path}`);
+            break;
+
+          default:
+            console.log(`Unhandled item type: ${item.type} for ${item.path}`);
+        }
+      }
+    }
+  } catch (error) {
+    if (error instanceof Error && "status" in error && error.status === 404) {
+      console.log(".github directory does not exist. Continuing...");
+      return;
+    }
+    console.log("error --createIssueTemplate.");
+    throw error;
+  }
 
   for (const templateFile of templateFiles) {
     console.log("templateFile is ", templateFile);
@@ -296,4 +375,38 @@ export async function fetchRepositoryConnectionStatus(fullName: string) {
   return {
     status: "NOT_CONNECTED",
   };
+}
+
+async function deleteDirectoryContents(
+  repoFullName: string,
+  directoryPath: string
+) {
+  try {
+    const { octokit } = await getOctokitClient();
+    const [owner, repo] = repoFullName.split("/");
+    const { data: dirContents } = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: directoryPath,
+    });
+
+    if (Array.isArray(dirContents) && dirContents.length > 0) {
+      for (const item of dirContents) {
+        if (item.type === "file") {
+          await octokit.repos.deleteFile({
+            owner,
+            repo,
+            path: item.path,
+            message: `Remove file from ${directoryPath}`,
+            sha: item.sha,
+          });
+        } else if (item.type === "dir") {
+          await deleteDirectoryContents(repoFullName, item.path);
+        }
+      }
+    }
+  } catch (error) {
+    console.log("error --deleteDirectoryContents", error);
+    throw error;
+  }
 }
