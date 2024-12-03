@@ -11,3 +11,17 @@ export interface Repository {
   url: string;
   githubId: number;
 }
+
+export type ConnectionStatus = "CONNECTED" | "NOT_CONNECTED";
+
+export enum IssueType {
+  BUG = "BUG",
+  FEATURE = "FEATURE",
+  IMPROVEMENT = "IMPROVEMENT",
+  OTHER = "OTHER",
+}
+
+export enum IssueStatus {
+  OPEN = "OPEN",
+  CLOSED = "CLOSED",
+}
