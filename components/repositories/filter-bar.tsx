@@ -1,11 +1,11 @@
 import React from "react";
 
-const filters = ["All", "Connected", "Not Connected"];
-
 export function FilterBar({
+  filters,
   activeFilter,
   onFilter,
 }: {
+  filters: string[];
   activeFilter: string;
   onFilter: (filter: string) => void;
 }) {

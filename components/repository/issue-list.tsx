@@ -8,7 +8,8 @@ import {
 import { IssueStatus, IssueType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Bug, GitPullRequest, Lightbulb, MoreHorizontal } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { useEffect, useState } from "react";
+import { FilterBar } from "../repositories/filter-bar";
 
 interface Issue {
   id: string;
@@ -22,6 +23,7 @@ interface Issue {
 interface IssuesListProps {
   issues: Issue[];
   onIssueClick: (issueId: string) => void;
+  searchQuery: string;
 }
 
 const issueTypeIcons = {
@@ -31,36 +33,56 @@ const issueTypeIcons = {
   OTHER: MoreHorizontal,
 };
 
-export function IssuesList({ issues, onIssueClick }: IssuesListProps) {
-  const openIssues = issues.filter((issue) => issue.status === "OPEN");
-  const closedIssues = issues.filter((issue) => issue.status === "CLOSED");
+export function IssuesList({
+  issues,
+  onIssueClick,
+  searchQuery = "",
+}: IssuesListProps) {
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues);
+  const filters = ["All", "Open", "Closed"];
+
+  const handleFilter = (filter: string) => {
+    setActiveFilter(filter);
+  };
+
+  useEffect(() => {
+    let result = issues;
+
+    if (activeFilter === "Open") {
+      result = result.filter((issue) => issue.status === "OPEN");
+    } else if (activeFilter === "Closed") {
+      result = result.filter((issue) => issue.status === "CLOSED");
+    }
+
+    if (searchQuery) {
+      const lowercaseQuery = searchQuery.toLowerCase();
+      result = result.filter(
+        (issue) =>
+          issue.title.toLowerCase().includes(lowercaseQuery) ||
+          (issue.body && issue.body.toLowerCase().includes(lowercaseQuery))
+      );
+    }
+
+    setFilteredIssues(result);
+  }, [issues, activeFilter, searchQuery]);
 
   return (
-    <Tabs defaultValue="all" className="w-full">
-      <TabsList className="mb-4">
-        <TabsTrigger value="all">All Issues ({issues.length})</TabsTrigger>
-        <TabsTrigger value="open">Open ({openIssues.length})</TabsTrigger>
-        <TabsTrigger value="closed">Closed ({closedIssues.length})</TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="all" className="space-y-4">
-        {issues.map((issue) => (
+    <div className="space-y-4">
+      <FilterBar
+        filters={filters}
+        activeFilter={activeFilter}
+        onFilter={handleFilter}
+      />
+      <div className="space-y-2">
+        {filteredIssues.map((issue) => (
           <IssueCard key={issue.id} issue={issue} onClick={onIssueClick} />
         ))}
-      </TabsContent>
-
-      <TabsContent value="open" className="space-y-4">
-        {openIssues.map((issue) => (
-          <IssueCard key={issue.id} issue={issue} onClick={onIssueClick} />
-        ))}
-      </TabsContent>
-
-      <TabsContent value="closed" className="space-y-4">
-        {closedIssues.map((issue) => (
-          <IssueCard key={issue.id} issue={issue} onClick={onIssueClick} />
-        ))}
-      </TabsContent>
-    </Tabs>
+        {filteredIssues.length === 0 && (
+          <div className="text-center text-gray-500">No issues found.</div>
+        )}
+      </div>
+    </div>
   );
 }
 

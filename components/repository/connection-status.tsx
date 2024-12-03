@@ -20,7 +20,7 @@ export function ConnectionStatusBadge({
       className={cn(
         "gap-1.5 px-3 py-1.5 transition-all duration-200",
         isConnected
-          ? "bg-stats-green/20 text-stats-green hover:bg-stats-green/30 border-stats-green/20"
+          ? " bg-[hsl(var(--stats-green))]/20 text-[hsl(var(--stats-green))] hover:bg-[hsl(var(--stats-green))]/30 border-[hsl(var(--stats-green))]/20"
           : "bg-destructive/20 text-destructive hover:bg-destructive/30 border-destructive/20",
         className
       )}

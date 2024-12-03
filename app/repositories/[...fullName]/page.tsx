@@ -65,6 +65,7 @@ function RepositoryDetailPage() {
               onIssueClick={(id) =>
                 setSelectedIssue(issues.find((issue) => issue.id === id))
               }
+              searchQuery=""
             />
           </div>
 

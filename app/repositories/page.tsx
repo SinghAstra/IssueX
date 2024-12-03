@@ -18,6 +18,7 @@ function RepositoryPage() {
     Repository[]
   >([]);
   const { searchQuery, setSearchQuery } = useSearch();
+  const filters = ["All", "Connected", "Not Connected"];
 
   useEffect(() => {
     repositories.map((repo) => {
@@ -113,7 +114,11 @@ function RepositoryPage() {
         onSearchChange={(e) => setSearchQuery(e.target.value)}
       />
       <div className="px-4 sm:px-6 lg:px-8 py-2 space-y-6">
-        <FilterBar activeFilter={activeFilter} onFilter={handleFilter} />
+        <FilterBar
+          filters={filters}
+          activeFilter={activeFilter}
+          onFilter={handleFilter}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRepositories.map((repo) => (
             <RepositoryCard key={repo.name} repo={repo} />
