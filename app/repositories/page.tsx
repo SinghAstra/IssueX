@@ -20,6 +20,12 @@ function RepositoryPage() {
   const { searchQuery, setSearchQuery } = useSearch();
 
   useEffect(() => {
+    repositories.map((repo) => {
+      console.log("repo.id is ", repo.id);
+    });
+  }, [repositories]);
+
+  useEffect(() => {
     async function fetchRepositories() {
       try {
         const fetchedRepos = await fetchGithubRepositories();

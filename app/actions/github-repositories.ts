@@ -46,13 +46,20 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
     const connectedRepos = await prisma.repository.findMany({
       where: { userId },
       select: {
+        id: true,
         githubId: true,
         connectionStatus: true,
       },
     });
 
     const connectedRepoMap = new Map(
-      connectedRepos.map((repo) => [repo.githubId, repo.connectionStatus])
+      connectedRepos.map((connectedRepo) => [
+        connectedRepo.githubId,
+        {
+          id: connectedRepo.id,
+          connectionStatus: connectedRepo.connectionStatus,
+        },
+      ])
     );
 
     const reposWithLanguages = await Promise.all(
@@ -72,9 +79,10 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
       })
     );
 
-    return reposWithLanguages.map(
-      (repo): Repository => ({
-        id: repo.id,
+    return reposWithLanguages.map((repo): Repository => {
+      const connectedRepoInfo = connectedRepoMap.get(repo.id);
+      return {
+        id: connectedRepoInfo?.id || repo.id,
         name: repo.name,
         fullName: repo.full_name,
         description: repo.description,
@@ -82,12 +90,13 @@ export async function fetchGithubRepositories(): Promise<Repository[]> {
           repo.repoLanguages.length > 0 ? repo.repoLanguages : ["Unknown"],
         stars: repo.stargazers_count,
         forks: repo.forks_count,
-        connectionStatus: connectedRepoMap.get(repo.id) || "NOT_CONNECTED",
+        connectionStatus:
+          connectedRepoInfo?.connectionStatus || "NOT_CONNECTED",
         updatedAt: repo.updated_at,
         url: repo.html_url,
         githubId: repo.id,
-      })
-    );
+      };
+    });
   } catch (error) {
     console.log("Error fetching GitHub repositories:", error);
     throw error;
@@ -382,4 +391,42 @@ async function deleteDirectoryContents(
     console.log("error --deleteDirectoryContents", error);
     throw error;
   }
+}
+
+export async function getRepositoryDetails(repositoryId: string) {
+  console.log("repositoryId is ", repositoryId);
+  const session = await getServerSession(authOptions);
+  console.log("session is ", session);
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const repo = await prisma.repository.findUnique({
+    where: {
+      id: repositoryId,
+      userId: session.user.id,
+    },
+  });
+
+  console.log("repo is ", repo);
+
+  return repo;
+
+  // return prisma.repository.findUnique({
+  //   where: {
+  //     id: repositoryId,
+  // userId: session.user.id,
+  // },
+  //   include: {
+  //     issues: {
+  //       include: {
+  //         comments: {
+  //           orderBy: { createdAt: "desc" },
+  //         },
+  //       },
+  //       orderBy: { createdAt: "desc" },
+  //     },
+  //   },
+  // });
 }
