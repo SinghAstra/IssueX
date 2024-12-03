@@ -37,7 +37,7 @@ const mockIssues = [
 
 function RepositoryDetailPage() {
   const params = useParams();
-  const repositoryId = params.id as string;
+  const repoFullName = (params.fullName as string[]).join("/");
   const [selectedIssue, setSelectedIssue] = useState<
     (typeof mockIssues)[0] | undefined
   >();
@@ -47,7 +47,7 @@ function RepositoryDetailPage() {
   useEffect(() => {
     async function fetchRepositoryDetails() {
       try {
-        const data = await getRepositoryDetails(repositoryId);
+        const data = await getRepositoryDetails(repoFullName);
         console.log("data is ", data);
         setRepository(data);
       } catch (error) {
@@ -58,7 +58,7 @@ function RepositoryDetailPage() {
     }
 
     fetchRepositoryDetails();
-  }, [repositoryId]);
+  }, [repoFullName]);
 
   if (isLoading) return <div className="text-white">Loading...</div>;
   if (!repository)

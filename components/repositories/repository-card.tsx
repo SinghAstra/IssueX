@@ -17,11 +17,11 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
     try {
       switch (repo.connectionStatus) {
         case "CONNECTED":
-          router.push(`/repositories/${repo.id}`);
+          router.push(`/repositories/${repo.fullName}`);
           break;
         default:
           const newRepo = await createRepositoryConnection(repo.fullName);
-          router.push(`/repositories/${newRepo.id}`);
+          router.push(`/repositories/${newRepo.fullName}`);
       }
     } catch (error) {
       console.log("error --handleConnect is ", error);

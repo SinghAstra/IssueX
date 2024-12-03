@@ -393,8 +393,8 @@ async function deleteDirectoryContents(
   }
 }
 
-export async function getRepositoryDetails(repositoryId: string) {
-  console.log("repositoryId is ", repositoryId);
+export async function getRepositoryDetails(repoFullName: string) {
+  console.log("repoFullName is ", repoFullName);
   const session = await getServerSession(authOptions);
   console.log("session is ", session);
 
@@ -402,20 +402,10 @@ export async function getRepositoryDetails(repositoryId: string) {
     throw new Error("Unauthorized");
   }
 
-  const repo = await prisma.repository.findUnique({
+  const repo = await prisma.repository.findFirst({
     where: {
-      id: repositoryId,
+      fullName: repoFullName,
       userId: session.user.id,
-    },
-    include: {
-      issues: {
-        include: {
-          comments: {
-            orderBy: { createdAt: "desc" },
-          },
-        },
-        orderBy: { createdAt: "desc" },
-      },
     },
   });
 
@@ -441,4 +431,22 @@ export async function getRepositoryDetails(repositoryId: string) {
     console.error("Error fetching GitHub repository details:", error);
     return repo;
   }
+}
+
+export async function getRepositoryIssues(repositoryId: string) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  return prisma.issue.findMany({
+    where: { repositoryId },
+    include: {
+      comments: {
+        orderBy: { createdAt: "desc" },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
 }
