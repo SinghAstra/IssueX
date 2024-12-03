@@ -1,3 +1,9 @@
+import { Repository as PrismaRepository } from "@prisma/client";
+
+export interface ExtendedRepository extends PrismaRepository {
+  githubCreatedAt?: Date;
+  githubUpdatedAt?: Date;
+}
 export interface Repository {
   id: string | number;
   name: string;
@@ -6,10 +12,12 @@ export interface Repository {
   languages: string[];
   stars: number;
   forks: number;
-  connectionStatus: string;
+  connectionStatus: ConnectionStatus;
   updatedAt: string | null;
   url: string;
   githubId: number;
+  githubCreatedAt?: Date;
+  githubUpdatedAt?: Date;
 }
 
 export type ConnectionStatus = "CONNECTED" | "NOT_CONNECTED";

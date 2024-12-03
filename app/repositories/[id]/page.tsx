@@ -1,11 +1,12 @@
 "use client";
-import { getRepositoryDetails } from "@/app/actions/github-repositories";
+import { getRepositoryDetails } from "@/app/actions/repositories";
 import { IssueDialog } from "@/components/repository/issue-dialog";
 import { IssuesList } from "@/components/repository/issue-list";
 import { RepositoryAnalytics } from "@/components/repository/repository-analytics";
 import { RepositoryHeader } from "@/components/repository/repository-header";
 import { RepositorySidebar } from "@/components/repository/repository-sidebar";
-import { IssueStatus, IssueType, Repository } from "@prisma/client";
+import { ExtendedRepository } from "@/types/repository";
+import { IssueStatus, IssueType } from "@prisma/client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -40,7 +41,7 @@ function RepositoryDetailPage() {
   const [selectedIssue, setSelectedIssue] = useState<
     (typeof mockIssues)[0] | undefined
   >();
-  const [repository, setRepository] = useState<Repository | null>(null);
+  const [repository, setRepository] = useState<ExtendedRepository | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -75,8 +76,9 @@ function RepositoryDetailPage() {
       <div className="flex">
         <RepositorySidebar
           description={repository.description ?? undefined}
-          createdAt={repository.createdAt}
-          updatedAt={repository.updatedAt}
+          createdAt={repository.githubCreatedAt!}
+          updatedAt={repository.githubUpdatedAt!}
+          repoUrl={repository.htmlUrl}
         />
 
         <div className="flex-1">

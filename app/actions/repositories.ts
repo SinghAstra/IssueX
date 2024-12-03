@@ -407,26 +407,38 @@ export async function getRepositoryDetails(repositoryId: string) {
       id: repositoryId,
       userId: session.user.id,
     },
+    include: {
+      issues: {
+        include: {
+          comments: {
+            orderBy: { createdAt: "desc" },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
   });
 
-  console.log("repo is ", repo);
+  if (!repo) {
+    throw new Error("Repository not found");
+  }
 
-  return repo;
+  try {
+    const { octokit } = await getOctokitClient();
+    const [owner, repoName] = repo.fullName.split("/");
 
-  // return prisma.repository.findUnique({
-  //   where: {
-  //     id: repositoryId,
-  // userId: session.user.id,
-  // },
-  //   include: {
-  //     issues: {
-  //       include: {
-  //         comments: {
-  //           orderBy: { createdAt: "desc" },
-  //         },
-  //       },
-  //       orderBy: { createdAt: "desc" },
-  //     },
-  //   },
-  // });
+    const { data: githubRepoDetails } = await octokit.repos.get({
+      owner,
+      repo: repoName,
+    });
+
+    return {
+      ...repo,
+      githubCreatedAt: new Date(githubRepoDetails.created_at),
+      githubUpdatedAt: new Date(githubRepoDetails.updated_at),
+    };
+  } catch (error) {
+    console.error("Error fetching GitHub repository details:", error);
+    return repo;
+  }
 }

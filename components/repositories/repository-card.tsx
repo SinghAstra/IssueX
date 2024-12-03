@@ -1,4 +1,4 @@
-import { createRepositoryConnection } from "@/app/actions/github-repositories";
+import { createRepositoryConnection } from "@/app/actions/repositories";
 import { cn } from "@/lib/utils";
 import { Repository } from "@/types/repository";
 import { Check, GitFork, Link2, Star } from "lucide-react";

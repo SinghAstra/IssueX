@@ -8,7 +8,7 @@ import { RepositoryCard } from "@/components/repositories/repository-card";
 import { RepositoryCardSkeleton } from "@/components/repositories/repository-card-skeleton";
 import { Repository } from "@/types/repository";
 import React, { useEffect, useState } from "react";
-import { fetchGithubRepositories } from "../actions/github-repositories";
+import { fetchGithubRepositories } from "../actions/repositories";
 
 function RepositoryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
