@@ -63,7 +63,6 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
       tabIndex={0}
       onClick={handleConnect}
       onKeyDown={(e) => {
-        // Allow activation with Enter or Space key
         if (e.key === "Enter" || e.key === " ") {
           handleConnect();
         }
@@ -104,6 +103,7 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
           href={repo.url}
           target="_blank"
           className={cn(buttonVariants({ variant: "outline" }), "flex-grow")}
+          onClick={(e) => e.stopPropagation()}
         >
           <Icons.gitLogo className="mr-2" />
           Github
