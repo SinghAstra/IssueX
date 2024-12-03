@@ -433,15 +433,25 @@ export async function getRepositoryDetails(repoFullName: string) {
   }
 }
 
-export async function getRepositoryIssues(repositoryId: string) {
+export async function getRepositoryIssues(repoFullName: string) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
     throw new Error("Unauthorized");
   }
 
+  const repository = await prisma.repository.findFirst({
+    where: { fullName: repoFullName, userId: session.user.id },
+  });
+
+  if (!repository) {
+    throw new Error(
+      `Repository with full name ${repoFullName} not found --getRepositoryIssues`
+    );
+  }
+
   return prisma.issue.findMany({
-    where: { repositoryId },
+    where: { repositoryId: repository.id },
     include: {
       comments: {
         orderBy: { createdAt: "desc" },

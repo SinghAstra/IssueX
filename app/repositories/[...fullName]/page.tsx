@@ -1,55 +1,32 @@
 "use client";
-import { getRepositoryDetails } from "@/app/actions/repositories";
-import { IssueDialog } from "@/components/repository/issue-dialog";
+import {
+  getRepositoryDetails,
+  getRepositoryIssues,
+} from "@/app/actions/repositories";
+import { Issue, IssueDialog } from "@/components/repository/issue-dialog";
 import { IssuesList } from "@/components/repository/issue-list";
-import { RepositoryAnalytics } from "@/components/repository/repository-analytics";
 import { RepositoryHeader } from "@/components/repository/repository-header";
 import { RepositorySidebar } from "@/components/repository/repository-sidebar";
 import { ExtendedRepository } from "@/types/repository";
-import { IssueStatus, IssueType } from "@prisma/client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const mockIssues = [
-  {
-    id: "1",
-    title: "Fix navigation bug",
-    body: "The navigation menu doesn't work properly on mobile devices",
-    issueType: "BUG" as IssueType,
-    status: "OPEN" as IssueStatus,
-    createdAt: new Date("2024-03-01"),
-    comments: [
-      {
-        id: "1",
-        body: "I can reproduce this on iPhone 12",
-        isAiGenerated: false,
-        createdAt: new Date("2024-03-02"),
-      },
-      {
-        id: "2",
-        body: "Based on the description, this appears to be related to the touch event handling...",
-        isAiGenerated: true,
-        createdAt: new Date("2024-03-03"),
-      },
-    ],
-  },
-];
 
 function RepositoryDetailPage() {
   const params = useParams();
   const repoFullName = (params.fullName as string[]).join("/");
-  const [selectedIssue, setSelectedIssue] = useState<
-    (typeof mockIssues)[0] | undefined
-  >();
+  const [selectedIssue, setSelectedIssue] = useState<Issue | undefined>();
   const [repository, setRepository] = useState<ExtendedRepository | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [issues, setIssues] = useState<Issue[]>([]);
 
   useEffect(() => {
     async function fetchRepositoryDetails() {
       try {
         const data = await getRepositoryDetails(repoFullName);
-        console.log("data is ", data);
         setRepository(data);
+
+        const fetchedIssues = await getRepositoryIssues(repoFullName);
+        setIssues(fetchedIssues);
       } catch (error) {
         console.log("Failed to fetch repository details", error);
       } finally {
@@ -84,14 +61,14 @@ function RepositoryDetailPage() {
         <div className="flex-1">
           <div className="p-6">
             <IssuesList
-              issues={mockIssues}
+              issues={issues}
               onIssueClick={(id) =>
-                setSelectedIssue(mockIssues.find((issue) => issue.id === id))
+                setSelectedIssue(issues.find((issue) => issue.id === id))
               }
             />
           </div>
 
-          <RepositoryAnalytics issues={mockIssues} />
+          {/* <RepositoryAnalytics issues={mockIssues} /> */}
         </div>
       </div>
 

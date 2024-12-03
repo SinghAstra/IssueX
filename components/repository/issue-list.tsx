@@ -16,7 +16,7 @@ interface Issue {
   issueType: IssueType;
   status: IssueStatus;
   createdAt: Date;
-  body?: string;
+  body: string | null;
 }
 
 interface IssuesListProps {

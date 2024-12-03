@@ -18,10 +18,10 @@ interface Comment {
   createdAt: Date;
 }
 
-interface Issue {
+export interface Issue {
   id: string;
   title: string;
-  body?: string;
+  body: string | null;
   issueType: IssueType;
   status: IssueStatus;
   createdAt: Date;
