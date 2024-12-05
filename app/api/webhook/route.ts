@@ -125,17 +125,17 @@ async function handleIssueEvent(
       status: "OPEN",
     };
     console.log("issueData is ", issueData);
-    const createdIssue = await prisma.issue.create({
-      data: {
-        githubIssueId: issue.id,
-        repositoryId: existingRepo.id,
-        issueType,
-        title: issue.title,
-        body: issue.body,
-        status: "OPEN",
-      },
-    });
-    console.log("createdIssue is ", createdIssue);
+    // const createdIssue = await prisma.issue.create({
+    //   data: {
+    //     githubIssueId: issue.id,
+    //     repositoryId: existingRepo.id,
+    //     issueType,
+    //     title: issue.title,
+    //     body: issue.body,
+    //     status: "OPEN",
+    //   },
+    // });
+    // console.log("createdIssue is ", createdIssue);
 
     const aiResponses = await generateAIResponseSections(issue, issueType);
 
@@ -150,14 +150,16 @@ async function handleIssueEvent(
         formatComment(response)
       );
 
-      await prisma.comment.create({
-        data: {
-          githubCommentId: githubComment.id,
-          issueId: createdIssue.id,
-          body: response.text,
-          isAiGenerated: true,
-        },
-      });
+      console.log("githubComment is ", githubComment);
+
+      // await prisma.comment.create({
+      //   data: {
+      //     githubCommentId: githubComment.id,
+      //     issueId: createdIssue.id,
+      //     body: response.text,
+      //     isAiGenerated: true,
+      //   },
+      // });
 
       // Add a small delay between comments to avoid rate limiting
       await new Promise((resolve) => setTimeout(resolve, 1000));
