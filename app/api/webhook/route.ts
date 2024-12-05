@@ -144,6 +144,7 @@ async function handleIssueEvent(
     }
 
     for (const response of aiResponses) {
+      console.log("response is ", response);
       const githubComment = await postGitHubComment(
         repository.full_name,
         issue.number,
