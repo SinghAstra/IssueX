@@ -92,9 +92,13 @@ export async function generateAIResponseSections(
           Provide a comprehensive response with detailed code examples, following all formatting and documentation requirements as specified.
         `;
 
+        console.log("sectionPrompt is ", sectionPrompt);
+
         const result = await model.generateContent(sectionPrompt);
         const response = result.response;
         const text = response.text();
+
+        console.log("text is ", text);
 
         responses.push({
           section: section.type,
@@ -119,12 +123,13 @@ export async function generateAIResponseSections(
 
 export async function generateAIResponse(prompt: string) {
   try {
+    console.log("prompt --generateAIResponse is ", prompt);
     const model = genAI.getGenerativeModel({
       model: "gemini-pro", // Use the most capable text model
     });
 
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     const text = response.text();
 
     console.log("Gemini response is ", text);
