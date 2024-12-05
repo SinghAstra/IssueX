@@ -2,7 +2,6 @@
 import { GitHubWebhookIssue } from "@/app/api/webhook/route";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { IssueType } from "@prisma/client";
-import { createAIPrompt } from "../prompt";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
@@ -74,7 +73,6 @@ export async function generateAIResponseSections(
 ) {
   const sections = sectionConfigs[issueType];
   const responses: ResponseSection[] = [];
-  const basePrompt = createAIPrompt(issue, issueType);
 
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -82,14 +80,16 @@ export async function generateAIResponseSections(
     for (const section of sections) {
       try {
         const sectionPrompt = `
-          Based on this request:
+          Based on this issue:
 
-          ${basePrompt}
+          ${issue}
 
           Please focus ONLY on providing a detailed response for the section:
           ${section.promptSection}
 
-          Provide a comprehensive response with detailed code examples, following all formatting and documentation requirements as specified.
+          Format each section clearly and provide practical, implementable code examples.
+          Use markdown formatting for better readability.
+          Include comments in code examples to explain the implementation details.
         `;
 
         console.log("sectionPrompt is ", sectionPrompt);
