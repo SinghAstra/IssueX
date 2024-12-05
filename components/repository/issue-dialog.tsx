@@ -1,3 +1,4 @@
+import { getIssueComments } from "@/app/actions/repositories";
 import {
   Dialog,
   DialogContent,
@@ -5,10 +6,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { IssueStatus, IssueType } from "@prisma/client";
+import { Comment, IssueStatus, IssueType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { CommentsSkeleton } from "../comments/CommentSkeleton";
+import { CommentsList } from "../comments/CommentsList";
 
 export interface Issue {
   id: string;
@@ -25,6 +29,31 @@ interface IssueDialogProps {
 }
 
 export function IssueDialog({ issue, onClose }: IssueDialogProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isCommentsLoading, setIsCommentsLoading] = useState(false);
+  const [commentsError, setCommentsError] = useState<string | null>(null);
+
+  const fetchComments = useCallback(async () => {
+    if (!issue) return;
+
+    setIsCommentsLoading(true);
+    setCommentsError(null);
+
+    try {
+      const comments = await getIssueComments(issue.id);
+      setComments(comments);
+    } catch (error) {
+      console.log("error --fetchComments", error);
+      setCommentsError("Failed to load comments. Please try again.");
+    } finally {
+      setIsCommentsLoading(false);
+    }
+  }, [issue]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
+
   if (!issue) return null;
 
   console.log("issue.body is ", issue.body);
@@ -88,30 +117,23 @@ export function IssueDialog({ issue, onClose }: IssueDialogProps) {
               <h3 className="text-lg font-semibold">Comments</h3>
             </div>
 
-            {/* <div className="space-y-4">
-              {issue.comments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className={`p-4 rounded-lg ${
-                    comment.isAiGenerated
-                      ? "bg-primary/10 border border-primary/20"
-                      : "bg-secondary"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    {comment.isAiGenerated && (
-                      <Badge variant="default">AI Generated</Badge>
-                    )}
-                    <span className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(comment.createdAt, {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
-                  <p className="text-sm">{comment.body}</p>
+            <div className="space-y-4">
+              {isCommentsLoading ? (
+                <CommentsSkeleton />
+              ) : commentsError ? (
+                <div className="text-red-500 text-center py-4">
+                  {commentsError}
+                  <button
+                    onClick={() => fetchComments()}
+                    className="ml-2 text-blue-500 hover:underline"
+                  >
+                    Retry
+                  </button>
                 </div>
-              ))}
-            </div> */}
+              ) : (
+                <CommentsList comments={comments} />
+              )}
+            </div>
           </div>
         </div>
       </DialogContent>

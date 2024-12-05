@@ -1,75 +1,122 @@
-name: 🚀 Feature Request
-description: "Propose a new feature"
-title: "🚀 Feature: "
-labels: [feature]
+name: "🚀 Feature Request"
+description: "Propose a new feature for our Next.js project with comprehensive details"
+title: "[Feature]: "
+labels:
+  - feature-request
+  - enhancement
 body:
-  - type: textarea
-    id: feature-description
-    validations:
-      required: true
+  - type: markdown
     attributes:
-      label: "📝 Feature Overview"
-      description: "Describe the feature concisely"
-      placeholder: "A new feature that allows users to..."
+      value: |
+        ## 📋 Feature Request Guidelines
+        Please provide detailed information about the proposed feature.
 
   - type: textarea
-    id: user-problem
+    id: feature-summary
+    attributes:
+      label: "🌟 Feature Summary"
+      description: "Provide a clear, concise summary of the feature"
+      placeholder: "Brief description of the proposed feature"
     validations:
       required: true
-    attributes:
-      label: "🎯 Problem to Solve"
-      description: "What user problem or pain point does this feature address?"
-      placeholder: "Current users struggle with... This feature would help by..."
-
-  - type: textarea
-    id: proposed-solution
-    validations:
-      required: true
-    attributes:
-      label: "💡 Proposed Solution"
-      description: "Outline the proposed implementation"
-      placeholder: "Implement a [feature type] that enables users to..."
-
-  - type: textarea
-    id: user-flow
-    validations:
-      required: true
-    attributes:
-      label: "🚶 User Journey"
-      description: "Describe the step-by-step user interaction"
-      placeholder: "1. User navigates to...
-2. User clicks/selects...
-3. System responds by...
-4. User achieves desired outcome..."
-
-  - type: textarea
-    id: ui-mockup
-    validations:
-      required: false
-    attributes:
-      label: "🖼️ UI Concept (Optional)"
-      description: "Describe or sketch out potential UI elements"
-      placeholder: "The feature would include:
-- A button in [location]
-- A modal/popup with...
-- Interaction would look like..."
 
   - type: checkboxes
-    id: prior-research
+    id: technology-stack
     attributes:
-      label: "🕵️ Pre-Submission Checks"
+      label: "🔧 Predefined Technology Stack"
+      description: "Confirm the technology stack for this feature"
       options:
-        - label: "I've checked for existing similar feature requests"
-          required: true
-        - label: "I understand this is a feature request, not a bug report"
-          required: true
+        - label: Frontend Framework - Next.js (React)
+        - label: Backend - Next.js API Routes / Serverless Functions
+        - label: Programming Language - TypeScript
+        - label: Styling - Tailwind CSS
+        - label: UI Component Library - Shadcn/UI
+        - label: Form Handling - React Hook Form
+        - label: Validation - Zod
+        - label: Authentication - NextAuth.js
+        - label: Database - Prisma with PostgreSQL
+        - label: Deployment - Vercel
 
-  - type: dropdown
-    id: contribution
+  - type: textarea
+    id: feature-objectives
     attributes:
-      label: "🤝 Contribution Interest"
-      description: "Would you like to help implement this feature?"
-      options:
-        - "I'm interested in submitting a PR"
-        - "Looking for guidance"
-        - "Just submitting the idea"
+      label: "🎯 Feature Objectives"
+      description: "Describe the primary objectives and expected user benefits"
+      placeholder: |
+        - Objective 1
+        - Objective 2
+        - User benefit
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-details
+    attributes:
+      label: "📐 Implementation Details"
+      description: "Provide detailed information about frontend components and API requirements"
+      placeholder: |
+        ### Frontend Components
+        - Required Components:
+          - Component 1 (TypeScript)
+          - Component 2 (TypeScript)
+          - Page/Route Components
+
+        ### API and Backend
+        - Next.js API Routes:
+          - New endpoint 1
+          - New endpoint 2
+
+        ### Prisma Model Updates
+        - Database schema changes
+        - Relationship modifications
+    validations:
+      required: true
+
+  - type: textarea
+    id: ui-ux-requirements
+    attributes:
+      label: "🖼️ UI/UX Requirements"
+      description: "Describe design specifications, component usage, and form handling"
+      placeholder: |
+        ### Design Specifications
+        - Shadcn/UI components to use
+        - Tailwind CSS classes
+          - Custom classes needed
+          - Responsive design considerations
+
+        ### Form Handling
+        - React Hook Form details
+          - Form structure
+          - Validation rules (Zod schema)
+          - Error handling
+    validations:
+      required: true
+
+  - type: textarea
+    id: authentication-considerations
+    attributes:
+      label: "🔐 Authentication Considerations"
+      description: "Outline any authentication-related requirements"
+      placeholder: |
+        - Authentication flow impact
+        - Role-based access control
+        - NextAuth.js integration points
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "📋 Acceptance Criteria"
+      description: "Define the must-have features and performance considerations"
+      placeholder: |
+        ### Feature Must-Haves
+        - Meets performance budget
+        - Fully typed (TypeScript)
+        - Responsive design
+        - Accessibility compliant
+
+        ### Performance Considerations
+        - Server-side rendering optimization
+        - Static generation strategy
+        - Minimal bundle size impact
+    validations:
+      required: true

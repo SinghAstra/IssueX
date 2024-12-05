@@ -455,3 +455,17 @@ export async function getRepositoryIssues(repoFullName: string) {
     orderBy: { createdAt: "desc" },
   });
 }
+
+export async function getIssueComments(issueId: string) {
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { issueId },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return comments;
+  } catch (error) {
+    console.log("error --getIssueComments");
+    throw error;
+  }
+}
