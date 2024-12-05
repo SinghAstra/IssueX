@@ -3,7 +3,7 @@ import {
   getRepositoryDetails,
   getRepositoryIssues,
 } from "@/app/actions/repositories";
-import { Issue, IssueDialog } from "@/components/repository/issue-dialog";
+import { IssueDialog } from "@/components/repository/issue-dialog";
 import { IssuesList } from "@/components/repository/issue-list";
 import { IssuesListSkeleton } from "@/components/repository/issue-list-skeleton";
 import { RepositoryHeader } from "@/components/repository/repository-header";
@@ -11,6 +11,7 @@ import { RepositoryHeaderSkeleton } from "@/components/repository/repository-hea
 import { RepositorySidebar } from "@/components/repository/repository-sidebar";
 import { RepositorySidebarSkeleton } from "@/components/repository/repository-sidebar-skeleton";
 import { ExtendedRepository } from "@/types/repository";
+import { Issue } from "@prisma/client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -71,7 +72,7 @@ function RepositoryDetailPage() {
             name={repository.name}
             connectionStatus={repository.connectionStatus}
             htmlUrl={repository.htmlUrl ?? undefined}
-            onSync={() => console.log("Syncing...")}
+            // onSync={() => console.log("Syncing...")}
           />
         )
       )}
@@ -112,9 +113,6 @@ function RepositoryDetailPage() {
       <IssueDialog
         issue={selectedIssue}
         onClose={() => setSelectedIssue(undefined)}
-        onGenerateAiResponse={(issueId) =>
-          console.log("Generating AI response for issue:", issueId)
-        }
       />
     </div>
   );

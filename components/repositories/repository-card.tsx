@@ -30,14 +30,6 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
     }
   };
 
-  const truncateDescription = (description: string | null, maxLength = 50) => {
-    if (!description) return;
-
-    return description.length > maxLength
-      ? `${description.slice(0, maxLength)}...`
-      : description;
-  };
-
   const getButtonProps = () => {
     switch (repo.connectionStatus) {
       case "CONNECTED":
@@ -94,8 +86,8 @@ export function RepositoryCard({ repo }: { repo: Repository }) {
           ))}
         </div> */}
 
-      <div className="text-gray-600 p-4 text-sm">
-        {truncateDescription(repo.description)}
+      <div className="text-gray-600 px-4 text-sm line-clamp-4">
+        {repo.description}
       </div>
 
       <div className="mt-auto p-4 border-t flex space-x-2">

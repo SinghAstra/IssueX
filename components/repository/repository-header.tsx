@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ConnectionStatus } from "@prisma/client";
-import { RefreshCw } from "lucide-react";
+// import { RefreshCw } from "lucide-react";
 import { Icons } from "../Icons";
 import { ConnectionStatusBadge } from "./connection-status";
 
@@ -8,14 +8,13 @@ interface RepositoryHeaderProps {
   name: string;
   connectionStatus: ConnectionStatus;
   htmlUrl?: string;
-  onSync?: () => void;
+  // onSync?: () => void;
 }
 
 export function RepositoryHeader({
   name,
   connectionStatus,
   htmlUrl,
-  onSync,
 }: RepositoryHeaderProps) {
   return (
     <div className="flex items-center justify-between p-6 border-b border-border">
@@ -33,10 +32,10 @@ export function RepositoryHeader({
             </a>
           </Button>
         )}
-        <Button variant="outline" size="sm" onClick={onSync}>
+        {/* <Button variant="outline" size="sm" onClick={onSync}>
           <RefreshCw className="w-4 h-4 mr-2" />
           Sync
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

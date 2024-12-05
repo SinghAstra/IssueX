@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,15 +7,8 @@ import {
 } from "@/components/ui/dialog";
 import { IssueStatus, IssueType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { MessageSquare, X } from "lucide-react";
-import { Badge } from "../ui/badge";
-
-interface Comment {
-  id: string;
-  body: string;
-  isAiGenerated: boolean;
-  createdAt: Date;
-}
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export interface Issue {
   id: string;
@@ -25,21 +17,17 @@ export interface Issue {
   issueType: IssueType;
   status: IssueStatus;
   createdAt: Date;
-  comments: Comment[];
 }
 
 interface IssueDialogProps {
   issue?: Issue;
   onClose: () => void;
-  onGenerateAiResponse: (issueId: string) => void;
 }
 
-export function IssueDialog({
-  issue,
-  onClose,
-  onGenerateAiResponse,
-}: IssueDialogProps) {
+export function IssueDialog({ issue, onClose }: IssueDialogProps) {
   if (!issue) return null;
+
+  console.log("issue.body is ", issue.body);
 
   return (
     <Dialog open={!!issue} onOpenChange={onClose}>
@@ -47,34 +35,60 @@ export function IssueDialog({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>{issue.title}</DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
           </div>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             Created {formatDistanceToNow(issue.createdAt, { addSuffix: true })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           {issue.body && (
-            <div className="prose prose-invert max-w-none">{issue.body}</div>
+            <div className="prose prose-invert max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  h1: ({ node, ...props }) => (
+                    <h1 className="text-2xl font-bold mb-4" {...props} />
+                  ),
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  h2: ({ node, ...props }) => (
+                    <h2 className="text-xl font-semibold mb-3" {...props} />
+                  ),
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  h3: ({ node, ...props }) => (
+                    <h3 className="text-lg font-semibold mb-2" {...props} />
+                  ),
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  ul: ({ node, ...props }) => (
+                    <ul className="list-disc pl-6 mb-4" {...props} />
+                  ),
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  ol: ({ node, ...props }) => (
+                    <ol className="list-decimal pl-6 mb-4" {...props} />
+                  ),
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  a: ({ node, ...props }) => (
+                    <a
+                      className="text-blue-500 hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      {...props}
+                    />
+                  ),
+                }}
+              >
+                {issue.body}
+              </ReactMarkdown>
+            </div>
           )}
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Comments</h3>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onGenerateAiResponse(issue.id)}
-              >
-                <MessageSquare className="w-4 h-4 mr-2" />
-                Generate AI Response
-              </Button>
             </div>
 
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               {issue.comments.map((comment) => (
                 <div
                   key={comment.id}
@@ -97,7 +111,7 @@ export function IssueDialog({
                   <p className="text-sm">{comment.body}</p>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </DialogContent>

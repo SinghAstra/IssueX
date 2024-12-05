@@ -10,7 +10,6 @@ export function RepositoryHeaderSkeleton() {
 
       <div className="flex items-center gap-3">
         <Skeleton className="h-4 w-4" />
-        <Skeleton className="h-4 w-8" />
       </div>
     </div>
   );

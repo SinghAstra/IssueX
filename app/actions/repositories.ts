@@ -452,11 +452,6 @@ export async function getRepositoryIssues(repoFullName: string) {
 
   return prisma.issue.findMany({
     where: { repositoryId: repository.id },
-    include: {
-      comments: {
-        orderBy: { createdAt: "desc" },
-      },
-    },
     orderBy: { createdAt: "desc" },
   });
 }
