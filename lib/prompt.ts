@@ -1,119 +1,97 @@
 import { GitHubWebhookIssue } from "@/app/api/webhook/route";
 import { IssueType } from "@prisma/client";
 
-export function createAIPrompt(
-  issue: GitHubWebhookIssue,
-  issueType: IssueType
-) {
-  const basePrompts = {
-    FEATURE: (title: string, body: string) => `
-      As an AI assistant, analyze this feature request and provide multiple detailed responses as separate sections:
+interface generatePromptProps {
+  issue: GitHubWebhookIssue;
+  issueType: IssueType;
+}
 
-      FEATURE REQUEST:
-      Title: ${title}
-      Description: ${body}
+// Issue Prompt Generation Utility
+export class IssuePromptGenerator {
+  private techStack = [
+    "Frontend Framework: Next.js (React)",
+    "Backend: Next.js API Routes",
+    "Language: TypeScript",
+    "Styling: Tailwind CSS",
+    "UI Library: Shadcn/UI",
+    "Form Handling: React Hook Form",
+    "Validation: Zod",
+    "Authentication: NextAuth.js",
+    "Database: Prisma with PostgreSQL",
+  ];
 
-      Please provide the following in your analysis:
+  // Prompt Generation Strategy
+  generatePrompt({ issue, issueType }: generatePromptProps) {
+    const promptTemplates = {
+      BUG: `
+        Bug Fix Analysis:
+        - Detailed problem description
+        - Root cause investigation
+        - Comprehensive solution strategy
+        - Code fix with comments
+        - Potential side-effect mitigation
+      `,
+      FEATURE: `
+        Feature Implementation Guidance:
+        - Comprehensive feature breakdown
+        - Architectural considerations
+        - Modular implementation approach
+        - Code snippets with best practices
+        - Performance and scalability insights
+      `,
+      IMPROVEMENT: `
+        Code Improvement Recommendations:
+        - Current implementation analysis
+        - Optimization strategies
+        - Refactoring suggestions
+        - Performance enhancement techniques
+        - Code quality improvements
+      `,
+      OTHER: `
+        - Suggestion on Resolving this issue:
+      `,
+    };
 
-      1. IMPLEMENTATION APPROACH:
-      - Detailed technical architecture
-      - Step-by-step implementation guide
-      - Code examples and explanations with comments
-      - Best practices and considerations
+    return `
+      Project Context:
+      - Tech Stack: ${this.techStack.join(", ")}
+      
+      Issue Type: ${IssueType}
+      Issue Title: ${issue.title}
+      
+      Detailed Requirements:
+      ${issue.body}
+      
+      ${promptTemplates[issueType]}
+      
+      Output Guidelines:
+      - Provide modular, production-ready code
+      - Include clear file structure
+      - Add comprehensive comments
+      - Suggest best practices
+      - Maximum response length: 60,000 characters
+    `;
+  }
 
-      2. UI/UX PROPOSALS:
-      - Provide 2-3 different UI approaches
-      - Include component structure
-      - Suggest interactions and animations
-      - Consider responsive design
-      - Include sample React/Next.js code with Tailwind CSS
+  splitLongResponse(response: string, maxLength: number = 60000): string[] {
+    const comments: string[] = [];
+    let currentComment = "";
 
-      3. TECHNICAL CONSIDERATIONS:
-      - Performance implications
-      - Security considerations
-      - Scalability aspects
-      - Testing strategy
+    const sections = response.split("\n\n");
 
-      Format each section clearly and provide practical, implementable code examples.
-      Use markdown formatting for better readability.
-      Include comments in code examples to explain the implementation details.
-    `,
+    for (const section of sections) {
+      if ((currentComment + section).length > maxLength) {
+        comments.push(currentComment);
+        currentComment = section;
+      } else {
+        currentComment += section + "\n\n";
+      }
+    }
 
-    BUG: (title: string, body: string) => `
-      Analyze this bug report and provide a comprehensive response:
+    if (currentComment) {
+      comments.push(currentComment);
+    }
 
-      BUG REPORT:
-      Title: ${title}
-      Description: ${body}
-
-      Please provide:
-
-      1. DIAGNOSIS:
-      - Root cause analysis
-      - Impact assessment
-      - Affected components
-
-      2. SOLUTION APPROACHES:
-      - Multiple potential fixes
-      - Code examples with comments
-      - Testing strategies
-
-      3. PREVENTION MEASURES:
-      - Best practices
-      - Code improvements
-      - Testing recommendations
-
-      Format each section clearly and provide practical, implementable code examples.
-      Use markdown formatting for better readability.
-      Include comments in code examples to explain the implementation details.
-    `,
-
-    IMPROVEMENT: (title: string, body: string) => `
-      As an AI assistant, analyze this improvement request and provide multiple detailed responses as separate sections:
-
-      IMPROVEMENT REQUEST:
-      Title: ${title}
-      Description: ${body}
-
-      Please provide the following in your analysis:
-
-      1. IMPROVEMENT PROPOSALS:
-      - Multiple optimization approaches
-      - Include sample React/Next.js code with comments
-
-      2. UI/UX ENHANCEMENTS:
-      - Visual improvements
-      - User experience optimizations
-      - Accessibility enhancements
-      - Component refinements
-      - Include sample React/Next.js code with Tailwind CSS
-
-      Format each section clearly and provide practical, implementable code examples.
-      Use markdown formatting for better readability.
-      Include comments in code examples to explain the implementation details.
-    `,
-
-    OTHER: (title: string, body: string) => `
-      As an AI assistant, analyze this issue and provide a structured response:
-
-      ISSUE DETAILS:
-      Title: ${title}
-      Description: ${body}
-
-      Please provide the following comprehensive analysis:
-
-      1. PROPOSED SOLUTIONS:
-      - Multiple approach suggestions
-      - Implementation considerations
-      - Code examples where applicable
-      - Best practices and recommendations
-      - Include sample React/Next.js code if UI/UX related
-
-      Format each section clearly and provide practical, implementable code examples.
-      Use markdown formatting for better readability.
-      Include comments in code examples to explain the implementation details.
-    `,
-  };
-
-  return basePrompts[issueType](issue.title, issue.body || "");
+    return comments;
+  }
 }

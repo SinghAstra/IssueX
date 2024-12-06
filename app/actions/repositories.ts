@@ -233,7 +233,7 @@ async function createWebhook(repoFullName: string) {
 
     if (process.env.NODE_ENV === "development") {
       WEBHOOK_URL =
-        "https://b7ef-2409-4089-a095-2f67-1839-c3cf-5ed1-7d9c.ngrok-free.app/api/webhook";
+        "https://ee7b-2409-4089-a095-2f67-4952-2639-9ff4-1c41.ngrok-free.app/api/webhook";
     } else {
       WEBHOOK_URL = process.env.NEXT_AUTH_URL + "/api/webhook";
     }

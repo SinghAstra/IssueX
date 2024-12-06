@@ -1,6 +1,7 @@
 import { generateAIResponse } from "@/lib/ai/gemini";
 import { categorizeIssue } from "@/lib/issue";
 import { prisma } from "@/lib/prisma";
+import { IssuePromptGenerator } from "@/lib/prompt";
 import { Octokit } from "@octokit/rest";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
@@ -71,7 +72,7 @@ async function postGitHubComment(
       body,
     });
 
-    console.log("comment --postGithubComment is ", response.data);
+    // console.log("comment --postGithubComment is ", response.data);
     return response.data;
   } catch (error) {
     console.log("error --postGithubComment");
@@ -134,20 +135,26 @@ async function handleIssueEvent(
     // });
     // console.log("createdIssue is ", createdIssue);
 
-    const response = await generateAIResponse(issue);
+    const promptGenerator = new IssuePromptGenerator();
+    const issuePrompt = promptGenerator.generatePrompt({ issue, issueType });
 
-    // console.log("response is ", response);
-
+    const response = await generateAIResponse(issuePrompt);
     if (!response) {
       return;
     }
+    const comments = promptGenerator.splitLongResponse(response.text);
 
     // console.log("response is ", response);
-    const githubComment = await postGitHubComment(
-      repository.full_name,
-      issue.number,
-      formatComment(response.text)
-    );
+
+    // console.log("response is ", response);
+
+    for (const comment of comments) {
+      const githubComment = await postGitHubComment(
+        repository.full_name,
+        issue.number,
+        formatComment(comment)
+      );
+    }
 
     // console.log("githubComment is ", githubComment);
 
@@ -206,8 +213,8 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("githubEvent is ", githubEvent);
-    console.log("data is ", data);
+    // console.log("githubEvent is ", githubEvent);
+    // console.log("data is ", data);
 
     switch (githubEvent) {
       case "issues":
