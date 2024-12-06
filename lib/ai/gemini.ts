@@ -7,10 +7,26 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function generateAIResponse(issue: GitHubWebhookIssue) {
   try {
     const prompt = `
-    Based on this issue:
-    ${issue}
-    Write the Code to Resolve this issue
-    Include comments in code examples to explain the implementation details.
+    Act as Full Stack Web Developer
+    Write the code in github Comment Markdown
+    Write code to add this feature 
+    You can take Inspiration From SAAS.
+    Specify file name and location too
+    You can suggest UI components to build using Shadcn And Tailwind if required
+    You can suggest backend actions and api to build if required
+    Write the Code.
+    Include comments in code to explain the implementation details.
+    ${issue.body}
+    The Tech Stack is 
+    - Frontend Framework - Next.js (React)
+    - Backend - Next.js API Routes / Serverless Functions
+    - Programming Language - TypeScript
+    - Styling - Tailwind CSS
+    - UI Component Library - Shadcn/UI
+    - Form Handling - React Hook Form
+    - Validation - Zod
+    - Authentication - NextAuth.js
+    - Database - Prisma with PostgreSQL
   `;
     console.log("prompt --generateAIResponse is ", prompt);
     const model = genAI.getGenerativeModel({

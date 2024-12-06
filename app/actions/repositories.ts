@@ -232,7 +232,8 @@ async function createWebhook(repoFullName: string) {
     let WEBHOOK_URL;
 
     if (process.env.NODE_ENV === "development") {
-      WEBHOOK_URL = "https://issuex.vercel.app/api/webhook";
+      WEBHOOK_URL =
+        "https://b7ef-2409-4089-a095-2f67-1839-c3cf-5ed1-7d9c.ngrok-free.app/api/webhook";
     } else {
       WEBHOOK_URL = process.env.NEXT_AUTH_URL + "/api/webhook";
     }
@@ -303,6 +304,8 @@ export async function createRepositoryConnection(repoFullName: string) {
       },
     },
   });
+
+  console.log("existingRepository is ", existingRepository);
 
   if (existingRepository) {
     return existingRepository;
